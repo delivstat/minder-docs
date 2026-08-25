@@ -1,0 +1,1482 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A self-hosted home-security appliance. Watches, answers, acts, and tells you when it could not see.">
+      
+      
+      
+        <link rel="canonical" href="https://delivstat.github.io/minder/architecture/">
+      
+      
+        <link rel="prev" href="../face-recognition/">
+      
+      
+        <link rel="next" href="../privacy/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>How it works - Minder</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#how-minder-works" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Minder" class="md-header__button md-logo" aria-label="Minder" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Minder
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              How it works
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/delivstat/minder" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    delivstat/minder
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Minder" class="md-nav__button md-logo" aria-label="Minder" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Minder
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/delivstat/minder" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    delivstat/minder
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../using-minder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Minder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Faces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Faces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../face-recognition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection and recognition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-idea-the-model-reads-the-code-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The core idea: the model reads, the code does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The core idea: the model reads, the code does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The guards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measuring-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measuring it yourself
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-swarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The swarm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vision-two-layers-local-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vision: two layers, local first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection plugins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detection plugins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-levels-of-off-and-they-differ" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three levels of "off", and they differ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declared-cost-is-what-makes-arming-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declared cost is what makes arming safe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugins-are-classified-by-what-they-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugins are classified by what they remember
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-plugin-may-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a plugin may not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frames-they-get-what-they-asked-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frames: they get what they asked for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events-and-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events and alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario Studio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operating-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operating it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to read next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#the-shape" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The shape
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-core-idea-the-model-reads-the-code-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The core idea: the model reads, the code does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The core idea: the model reads, the code does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-guards" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The guards
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#measuring-it-yourself" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Measuring it yourself
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-swarm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The swarm
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vision-two-layers-local-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vision: two layers, local first
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#detection-plugins" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Detection plugins
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Detection plugins">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#three-levels-of-off-and-they-differ" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Three levels of "off", and they differ
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#declared-cost-is-what-makes-arming-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Declared cost is what makes arming safe
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#plugins-are-classified-by-what-they-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Plugins are classified by what they remember
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-plugin-may-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a plugin may not do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#frames-they-get-what-they-asked-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frames: they get what they asked for
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#events-and-alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Events and alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scenario-studio" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scenario Studio
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        State
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#operating-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Operating it
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-to-read-next" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where to read next
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="how-minder-works">How Minder works<a class="headerlink" href="#how-minder-works" title="Permanent link">&para;</a></h1>
+<p>The technical picture: what runs, what talks to what, and why it is arranged this way. For using
+Minder, see <a href="../using-minder/">Using Minder</a>. For the reasoning behind individual decisions, the
+<code>design/</code> directory has 21 notes — this page is the map that tells you which one to open.</p>
+<h2 id="the-shape">The shape<a class="headerlink" href="#the-shape" title="Permanent link">&para;</a></h2>
+<p>Five containers on one host, all on the host network:</p>
+<table>
+<thead>
+<tr>
+<th>Container</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>frigate</code></td>
+<td>Camera detection — RTSP in, object detections out over MQTT</td>
+</tr>
+<tr>
+<td><code>mosquitto</code></td>
+<td>The MQTT bus everything else talks over</td>
+</tr>
+<tr>
+<td><code>homeassistant</code></td>
+<td>Device control (lights, switches, sensors) — a hidden integration layer</td>
+</tr>
+<tr>
+<td><code>minder</code></td>
+<td>Everything that is <em>Minder</em>: the swarm, the bots, the webapp</td>
+</tr>
+<tr>
+<td><code>frigate-init</code></td>
+<td>One-shot: writes Frigate's config from your camera list, then exits</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ollama is a host prerequisite, not a container.</strong> The router and vision models run on the host and
+are reached over <code>localhost:11434</code> (the stack is on the host network). That is deliberate — it is
+what keeps camera frames inside the house — but it does mean <code>docker compose up</code> alone is not enough
+on a fresh machine: <code>qwen2.5:3b</code> and <code>qwen2.5vl:3b</code> must be pulled first.</p>
+<p>The <code>minder</code> container supervises four processes:</p>
+<div class="highlight"><pre><span></span><code>swarmkit serve /app/workspace --port 8321   # the agent swarm, HTTP on localhost
+python3 /app/webapp/app.py                  # onboarding + ops API, port 80
+python3 /app/bot.py                         # Telegram adapter
+python3 /app/discord_bot.py                 # Discord adapter
+</code></pre></div>
+<p>Each is restarted independently if it dies. A crashed Telegram bot does not take the cameras with it.</p>
+<h2 id="the-core-idea-the-model-reads-the-code-does">The core idea: the model reads, the code does<a class="headerlink" href="#the-core-idea-the-model-reads-the-code-does" title="Permanent link">&para;</a></h2>
+<p>This is the decision everything else follows from
+(<code>design/conversation-router.md</code>).</p>
+<p>When you send a message, a small local model does exactly <strong>one</strong> job: turn your sentence into a
+structured plan — <em>which kind of request is this, which camera, which device, what condition</em>. It
+does not act. It does not call tools in a loop. It emits a plan and stops.</p>
+<p>Deterministic Python then executes that plan.</p>
+<div class="highlight"><pre><span></span><code>"is someone at the main door"
+   → router: {kind: query, camera: Front-Door}
+   → code: fetch snapshot → describe → reply
+</code></pre></div>
+<p>The reason is reliability. An agent that decides <em>and</em> acts in a loop fails in ways you cannot
+reproduce: it retries, it hallucinates a camera name, it takes a different path on identical input.
+Splitting them means the only thing that varies is the parse — and the parse is testable.
+<code>scripts/router_cases.json</code> pins <strong>166 utterances</strong> against expected intents, drawn from this
+appliance's own camera and device names.</p>
+<h3 id="the-guards">The guards<a class="headerlink" href="#the-guards" title="Permanent link">&para;</a></h3>
+<p>A 3B does not parse well enough on its own. Measured on those 166 cases, <code>qwen2.5:3b</code> gets the
+intent right <strong>62%</strong> of the time — not usable for a system that switches your pump.</p>
+<p>So the plan passes through a deterministic correction pass (<code>_correct_plan</code>) before anything acts on
+it. That takes the same model to <strong>90%</strong>, and no guard has ever cost a case that was previously
+right:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>intent correct</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the model alone</td>
+<td>62.2%</td>
+</tr>
+<tr>
+<td>after the guards</td>
+<td><strong>90.4%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The guards are not patches around a bad model — <strong>they are what makes a local 3B viable</strong>, and so
+they are the reason Minder needs no cloud for language. Each one restates something an intent already
+means:</p>
+<ul>
+<li><em>A scenario is a standing rule with a future trigger</em> — so "turn on the pump", with no trigger, is
+  a command, not a rule. This one matters beyond accuracy: a scenario is <strong>stored</strong>, so a misread
+  command silently never runs.</li>
+<li><em>A device command must say what to do</em> — so "what smart plugs do I have" is a question, not an
+  instruction to switch one.</li>
+<li><em>A message naming a camera is about that camera</em> — the names are <code>Side-Gate</code>, people type
+  "bedroom deck", and matching those is code's job rather than the model's.</li>
+</ul>
+<p>They are also <strong>specific to the model deployed</strong>. Benchmarked against a larger <code>qwen3.5:4b</code>, the same
+guards helped nothing — that model does not make these mistakes. Change the router model and the
+guards should be re-measured rather than trusted.</p>
+<h3 id="measuring-it-yourself">Measuring it yourself<a class="headerlink" href="#measuring-it-yourself" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>minder<span class="w"> </span>python<span class="w"> </span>/app/scripts/bench_router.py<span class="w"> </span>/app/scripts/router_cases.json
+</code></pre></div>
+<p>Prints per-intent accuracy, what the guards changed, and latency. It asks the model once per case and
+scores the answer twice — before and after the guards — so the difference between the two numbers is
+the guards and not sampling noise.</p>
+<p>Every routing decision is also recorded to the observation log (<code>router_log.py</code>), with the utterance,
+the model's intent and the guards' intent. <code>scripts/harvest_router_cases.py</code> turns that traffic into
+new labelled cases, so the benchmark grows toward what your household actually says rather than what
+we imagined it would. <code>MINDER_ROUTER_LOG=off</code> disables the recording.</p>
+<h2 id="the-swarm">The swarm<a class="headerlink" href="#the-swarm" title="Permanent link">&para;</a></h2>
+<p>The workspace holds nine topologies, each a bounded job:</p>
+<table>
+<thead>
+<tr>
+<th>Topology</th>
+<th>Job</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minder-router</code></td>
+<td>Parse a message into a plan (the hot path)</td>
+</tr>
+<tr>
+<td><code>minder-core</code></td>
+<td>The general conversational agent</td>
+</tr>
+<tr>
+<td><code>minder-device</code></td>
+<td>Device control through Home Assistant</td>
+</tr>
+<tr>
+<td><code>minder-discover</code></td>
+<td>Find cameras on the network</td>
+</tr>
+<tr>
+<td><code>minder-doctor</code></td>
+<td>Self-diagnosis — the six-hourly health check</td>
+</tr>
+<tr>
+<td><code>minder-frigate-config</code></td>
+<td>Write Frigate's configuration</td>
+</tr>
+<tr>
+<td><code>minder-ha-setup</code></td>
+<td>Home Assistant onboarding</td>
+</tr>
+<tr>
+<td><code>minder-onboard</code></td>
+<td>First-run setup</td>
+</tr>
+<tr>
+<td><code>minder-weather</code></td>
+<td>Weather lookups</td>
+</tr>
+</tbody>
+</table>
+<p>They run on <a href="https://github.com/delivstat/swarmkit">SwarmKit</a>, pinned once as <code>SWARMKIT_VERSION</code> in
+<code>docker-compose.yml</code>. Minder consumes the released runtime from PyPI — there is no path into a
+SwarmKit checkout anywhere in this repo.</p>
+<p>Tools reach the swarm as <strong>six MCP servers</strong> (<code>mcp-servers/</code>): <code>camera</code>, <code>vision</code>, <code>detect</code>, <code>tuya</code>,
+<code>doctor</code>, <code>frigate</code>. Each is a stdio subprocess the runtime governs — every tool call is policy-checked
+and audited.</p>
+<h2 id="vision-two-layers-local-first">Vision: two layers, local first<a class="headerlink" href="#vision-two-layers-local-first" title="Permanent link">&para;</a></h2>
+<p><code>design/two-layer-vision-models.md</code> has the full argument.</p>
+<ul>
+<li><strong>Layer 1 — per-alert enrichment.</strong> Runs on every alert, so it must be cheap: a small local VLM
+  (Ollama, CPU) that says what is in frame.</li>
+<li><strong>Layer 2 — interactive questions.</strong> "What is the person doing?", "is that dangerous?" — a capable
+  model that reads <em>and</em> judges. Local by default, cloud when you enable it.</li>
+</ul>
+<p>Vision runs on <strong>CPU deliberately</strong>. On this hardware the GPU thrashes between the detector and the
+VLM, and the CPU path is slower per call but does not destabilise detection
+(<code>design/vision-architecture.md</code>).</p>
+<p>Cloud escalation is opt-in per layer (<code>MINDER_DESCRIBE_PROVIDER</code>, <code>MINDER_QUERY_PROVIDER</code>) and falls
+back to local on failure — a cloud outage degrades quality, never availability.</p>
+<h2 id="detection-plugins">Detection plugins<a class="headerlink" href="#detection-plugins" title="Permanent link">&para;</a></h2>
+<p>Optional perception — faces today, cartons on a belt or hard-hats tomorrow — added without a rebuild
+and without touching the detection path
+(<code>design/detection-plugins.md</code>).</p>
+<p>A plugin is a directory in <code>/data/plugins/</code> holding a manifest, some code, and a model fetched on
+install with a checksum. Models are <strong>not</strong> baked into the image: it is already ~3GB, and one nobody
+arms is a pure tax.</p>
+<h3 id="three-levels-of-off-and-they-differ">Three levels of "off", and they differ<a class="headerlink" href="#three-levels-of-off-and-they-differ" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Meaning</th>
+<th>Costs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>not installed</strong></td>
+<td>no manifest, no model</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><strong>installed</strong></td>
+<td>registered, authorable in rules, <strong>model not loaded</strong></td>
+<td>disk</td>
+</tr>
+<tr>
+<td><strong>armed</strong></td>
+<td>model resident, running on a cadence</td>
+<td>CPU</td>
+</tr>
+</tbody>
+</table>
+<p>The middle one is the point: you can install something to look at it without paying for it. Nothing
+loads until you arm it, and <code>MINDER_PLUGINS=off</code> stops all of it regardless.</p>
+<h3 id="declared-cost-is-what-makes-arming-safe">Declared cost is what makes arming safe<a class="headerlink" href="#declared-cost-is-what-makes-arming-safe" title="Permanent link">&para;</a></h3>
+<p>Every manifest states what it costs, so Minder can refuse the third heavy plugin with a reason you
+can act on rather than you discovering it later as Frigate dropping frames:</p>
+<div class="highlight"><pre><span></span><code>Face needs 7.5% of a core (750ms every 10s); already armed: Carton counter 3.6%;
+budget is 25%. Disarm something or raise MINDER_PLUGIN_CPU_BUDGET.
+</code></pre></div>
+<p>The budget is <strong>continuous</strong> cost — 180ms every 5s is 3.6% of a core — because that is what runs
+out, not peak inference time.</p>
+<h3 id="plugins-are-classified-by-what-they-remember">Plugins are classified by what they remember<a class="headerlink" href="#plugins-are-classified-by-what-they-remember" title="Permanent link">&para;</a></h3>
+<p>Not by what they detect. Governance follows the kind automatically, so a plugin author cannot skip
+the consent machinery by not thinking about it.</p>
+<table>
+<thead>
+<tr>
+<th>Kind</th>
+<th>Keeps</th>
+<th>Examples</th>
+<th>Brings with it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>detector</code></td>
+<td>nothing between frames</td>
+<td>faces-without-names, cartons, PPE</td>
+<td>nothing</td>
+</tr>
+<tr>
+<td><code>identifier</code></td>
+<td>templates identifying a <strong>person</strong></td>
+<td>face recognition, ANPR</td>
+<td>enrolment, consent, retention, provable deletion</td>
+</tr>
+<tr>
+<td><code>tracker</code></td>
+<td>cross-frame state, no identity</td>
+<td>loitering, queue length</td>
+<td>a memory bound</td>
+</tr>
+</tbody>
+</table>
+<p>A licence plate identifies a person as surely as a face does — ANPR is an <code>identifier</code>.</p>
+<h3 id="what-a-plugin-may-not-do">What a plugin may not do<a class="headerlink" href="#what-a-plugin-may-not-do" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>It cannot set alert severity.</strong> What a plugin returns has no field for it, so a badly-tuned
+  detector cannot wake you at 3am.</li>
+<li><strong>It cannot suppress an alert.</strong> The runner has no route to the alert path at all — a test asserts
+  that on its source. A plugin <em>annotates</em>; Minder's rules decide.</li>
+</ul>
+<p>A wrong match therefore costs a wrong name rather than a missed event, and the security behaviour
+does not depend on any plugin being accurate.</p>
+<h3 id="frames-they-get-what-they-asked-for">Frames: they get what they asked for<a class="headerlink" href="#frames-they-get-what-they-asked-for" title="Permanent link">&para;</a></h3>
+<p>Frigate detects on the <strong>352x288 substream</strong> — enough to find a person, not to identify one. A
+plugin that needs resolution declares <code>frame.source: main</code>, and gets <strong>one</strong> on-demand grab when a
+detection says there is something worth looking at. Never a second continuous decode: an N100 cannot
+decode eight main streams, but it can afford one frame on a rare event.</p>
+<p>Minder then crops to the box Frigate already found. Measured here: <strong>185x398 out of 2560x1440 — 2%
+of the pixels at full resolution, and YuNet runs in 9ms instead of 453ms.</strong> Cheaper than scanning
+the frame and sharper than shrinking it.</p>
+<p>A plugin that asked for the main stream is never handed a substream frame instead — it would answer
+confidently on it. A camera whose main stream is unreachable simply cannot serve that plugin, and
+the plugin list says which cameras it can.</p>
+<p>The grab is deleted as soon as the plugins have looked: it is a full-resolution photograph of
+whoever was at the door, and Frigate's own snapshot is the retained record.</p>
+<h3 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>minder<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>
+<span class="s2">import plugin_install as pi; print(pi.install('face-detect'))"</span>
+</code></pre></div>
+<p>Installing never arms. Reinstalling to repair a corrupt model never changes what is armed.</p>
+<h2 id="events-and-alerts">Events and alerts<a class="headerlink" href="#events-and-alerts" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>camera → frigate → MQTT (frigate/events) → minder
+   → is this camera armed? is it in quiet hours? does a rule match?
+   → describe the frame
+   → alert bus (MQTT minder/alerts)
+   → telegram / discord adapters
+</code></pre></div>
+<p>The <strong>alert bus</strong> is the seam that makes channels pluggable
+(<code>design/messaging-adapters.md</code>). Minder publishes an alert once;
+each adapter subscribes and renders it its own way. Adding a channel means adding a subscriber, not
+touching the detection path. It exists because India blocked Telegram and the product needed a second
+channel without a rewrite.</p>
+<h2 id="scenario-studio">Scenario Studio<a class="headerlink" href="#scenario-studio" title="Permanent link">&para;</a></h2>
+<p>Rules you describe in words — <em>"turn on the pump when there is a person at the main door"</em> — become
+running automations. Five design notes cover it (<code>design/scenario-studio*.md</code>): count thresholds,
+zones, cross-camera conditions, quick mode, severity escalation.</p>
+<p>The important property: a rule is <strong>data</strong>, not generated code. You can list, inspect and delete
+rules, and Minder shows you the rule it wrote before it starts running it.</p>
+<h2 id="state">State<a class="headerlink" href="#state" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Where</th>
+<th>What</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>minder_minder-data</code> volume → <code>/data</code></td>
+<td>cameras, events, rules, channel config, monitor state</td>
+</tr>
+<tr>
+<td><code>minder_ha-config</code> volume</td>
+<td>Home Assistant's own configuration</td>
+</tr>
+<tr>
+<td><code>minder_frigate-media</code> volume</td>
+<td>recordings and snapshots</td>
+</tr>
+<tr>
+<td><code>backups/</code> (bind mount)</td>
+<td>nightly backups, kept on the host</td>
+</tr>
+<tr>
+<td><code>workspace/.swarmkit/</code></td>
+<td>audit log, conversations, run state</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The compose project name is pinned to <code>minder</code></strong> in <code>docker-compose.yml</code>. Volume names are prefixed
+with the project name, which compose otherwise infers from the directory — so an unpinned project in
+a renamed directory silently creates <em>new, empty</em> volumes while the real ones sit untouched on disk.
+That is a wiped-appliance-shaped failure with a one-line cause; the pin removes it.</p>
+<h2 id="operating-it">Operating it<a class="headerlink" href="#operating-it" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/minder
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">              </span><span class="c1"># start</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>minder<span class="w">     </span><span class="c1"># watch</span>
+docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>minder<span class="w">     </span><span class="c1"># restart just the swarm container</span>
+</code></pre></div>
+<ul>
+<li>Minder's SwarmKit server is on <strong>8321</strong>, the webapp on <strong>80</strong>. Because everything is
+  <code>network_mode: host</code>, anything else on this machine must avoid those ports.</li>
+<li><strong>Telemetry is off by default.</strong> <code>MINDER_OTEL=otlp</code> enables OTLP export to a collector on
+  <code>localhost:4318</code>. It used to default on, and with no collector listening it logged a connection
+  error every ~20 seconds until the real logs were unreadable.</li>
+<li>The nightly backup writes to <code>backups/</code>. Restore from the web UI.</li>
+</ul>
+<h2 id="tests">Tests<a class="headerlink" href="#tests" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>minder-ci<span class="w"> </span>.<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>-v<span class="w"> </span><span class="s2">"</span><span class="nv">$PWD</span><span class="s2">:/app"</span><span class="w"> </span>-w<span class="w"> </span>/app<span class="w"> </span>--entrypoint<span class="w"> </span>sh<span class="w"> </span>minder-ci<span class="w"> </span>-c<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s1">'uv pip install --system -q pytest &amp;&amp; python -m pytest -q'</span>
+</code></pre></div>
+<p>Tests run <strong>inside the image</strong> because several reference <code>/app</code> paths that only exist in the
+container. 139 tests; 7 currently fail. Those seven are pre-existing — this suite lived in a repo
+whose pytest configuration excluded it, so it had never run as a suite until the extraction. CI
+deselects them by name and re-runs them in a second informational job, so the count is visible and
+goes down. See the README.</p>
+<h2 id="where-to-read-next">Where to read next<a class="headerlink" href="#where-to-read-next" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Question</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Why does the router work this way?</td>
+<td><code>design/conversation-router.md</code></td>
+</tr>
+<tr>
+<td>Why are there guards, and what do they buy?</td>
+<td><code>design/conversation-router.md</code> (the guard layer)</td>
+</tr>
+<tr>
+<td>What did the router actually measure?</td>
+<td><code>baseline/README.md</code></td>
+</tr>
+<tr>
+<td>Why CPU vision?</td>
+<td><code>design/vision-architecture.md</code></td>
+</tr>
+<tr>
+<td>How do the two vision layers split?</td>
+<td><code>design/two-layer-vision-models.md</code></td>
+</tr>
+<tr>
+<td>How do channels plug in?</td>
+<td><code>design/messaging-adapters.md</code></td>
+</tr>
+<tr>
+<td>How does self-healing work?</td>
+<td><code>design/health-monitor.md</code></td>
+</tr>
+<tr>
+<td>How are rules authored?</td>
+<td><code>design/scenario-studio.md</code></td>
+</tr>
+<tr>
+<td>How do detection plugins work?</td>
+<td><code>design/detection-plugins.md</code>, and the section above</td>
+</tr>
+<tr>
+<td>What does face recognition store, and how do I delete it?</td>
+<td><a href="../face-recognition/"><code>face-recognition.md</code></a></td>
+</tr>
+<tr>
+<td>How would the house's history become queryable?</td>
+<td><code>design/queryable-events.md</code></td>
+</tr>
+<tr>
+<td>How do Frigate events arrive?</td>
+<td><code>design/frigate-mqtt-events.md</code></td>
+</tr>
+</tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,1258 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="A self-hosted home-security appliance. Watches, answers, acts, and tells you when it could not see.">
+      
+      
+      
+        <link rel="canonical" href="https://delivstat.github.io/minder/using-minder/">
+      
+      
+        <link rel="prev" href="..">
+      
+      
+        <link rel="next" href="../walkthrough/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Using Minder - Minder</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#using-minder" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Minder" class="md-header__button md-logo" aria-label="Minder" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Minder
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Using Minder
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_0">
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="teal" data-md-color-accent="amber"  aria-hidden="true"  type="radio" name="__palette" id="__palette_1">
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/delivstat/minder" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    delivstat/minder
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Minder" class="md-nav__button md-logo" aria-label="Minder" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Minder
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/delivstat/minder" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    delivstat/minder
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Minder
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Using Minder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Docker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ollama-and-two-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ollama, and two models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-get-minder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Get Minder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-start-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Start it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-set-it-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Set it up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-it-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping it running
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#talking-to-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Talking to it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Talking to it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-it-misunderstands-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If it misunderstands you
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowing-who-is-who-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowing who is who (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-video-and-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshots, video and history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-minder-asks-you-something" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Minder asks you something
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-appliance-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the appliance lives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Faces
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Faces
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../face-recognition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Detection and recognition
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    How it works
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../privacy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Privacy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#before-you-start" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Before you start
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#installing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Installing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Installing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-docker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Docker
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-ollama-and-two-models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Ollama, and two models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-get-minder" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Get Minder
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-start-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Start it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-set-it-up" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Set it up
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keeping-it-running" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keeping it running
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#talking-to-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Talking to it
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Talking to it">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#if-it-misunderstands-you" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If it misunderstands you
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#knowing-who-is-who-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Knowing who is who (optional)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#alerts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alerts
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#snapshots-video-and-history" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Snapshots, video and history
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-minder-asks-you-something" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Minder asks you something
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#privacy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Privacy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#troubleshooting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Troubleshooting
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#where-the-appliance-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the appliance lives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="using-minder">Using Minder<a class="headerlink" href="#using-minder" title="Permanent link">&para;</a></h1>
+<p>Minder watches your cameras, answers questions about what it sees, and controls your smart devices —
+over Telegram or Discord. This page is everything you need as a user. Nothing here requires reading
+code.</p>
+<h2 id="before-you-start">Before you start<a class="headerlink" href="#before-you-start" title="Permanent link">&para;</a></h2>
+<p>You need:</p>
+<ul>
+<li><strong>A machine that stays on</strong> — a mini PC, a NUC, an old laptop. Linux (this is developed on Ubuntu
+  under WSL2 and on bare Ubuntu). 16GB RAM is comfortable; 8GB works if you use cloud vision.</li>
+<li><strong>Cameras that speak RTSP.</strong> Almost all IP cameras do. You will need their username and password.</li>
+<li><strong>A Telegram or Discord account</strong> to talk to it.</li>
+</ul>
+<p>Optional but recommended: a <strong>Home Assistant</strong>-compatible smart device or two, if you want Minder to
+switch things on and off. Home Assistant itself is installed for you — it is part of the stack.</p>
+<h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
+<h3 id="1-docker">1. Docker<a class="headerlink" href="#1-docker" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> </span>docker<span class="w"> </span><span class="nv">$USER</span><span class="w">      </span><span class="c1"># so you don't need sudo for docker</span>
+newgrp<span class="w"> </span>docker<span class="w">                      </span><span class="c1"># or just log out and back in</span>
+</code></pre></div>
+<p>Check it works: <code>docker run --rm hello-world</code>.</p>
+<h3 id="2-ollama-and-two-models">2. Ollama, and two models<a class="headerlink" href="#2-ollama-and-two-models" title="Permanent link">&para;</a></h3>
+<p>Minder's language and vision models run <strong>on the host</strong>, not in a container — that is what keeps
+your camera images inside the house.</p>
+<div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
+
+ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:3b<span class="w">       </span><span class="c1"># understands what you ask</span>
+ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5vl:3b<span class="w">     </span><span class="c1"># looks at camera frames</span>
+</code></pre></div>
+<p>Roughly 5GB total. They run on CPU; no GPU required.</p>
+<p>Use a recent Ollama if you can — <strong>0.32 or newer</strong>. Upgrading from 0.21 made Minder's routing more
+than twice as fast on the same model, and older builds quietly ignore the structured-output format
+for newer model families, which makes them look broken when they are not.</p>
+<blockquote>
+<p><strong>Skipping this?</strong> You can run entirely on cloud AI instead — set <code>OPENROUTER_API_KEY</code> in step 4
+and <code>MINDER_DESCRIBE_PROVIDER=openrouter</code>. It is faster and more detailed, but camera snapshots
+then leave your network.</p>
+</blockquote>
+<h3 id="3-get-minder">3. Get Minder<a class="headerlink" href="#3-get-minder" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:delivstat/minder.git<span class="w"> </span>~/minder
+<span class="nb">cd</span><span class="w"> </span>~/minder
+</code></pre></div>
+<p>Keep the directory named <strong><code>minder</code></strong>. Docker names your data after it, so a different name means
+Minder comes up empty and looks like it lost everything.</p>
+<h3 id="4-configure">4. Configure<a class="headerlink" href="#4-configure" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+nano<span class="w"> </span>.env
+</code></pre></div>
+<p>You can genuinely leave all of it blank on a first run — the web interface auto-detects your
+network and asks for camera credentials during onboarding. Fill these in only if discovery does not
+find your cameras:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">MINDER_SUBNET</span><span class="o">=</span><span class="m">192</span>.168.0<span class="w">    </span><span class="c1"># the first THREE octets of your network, no /24 and no trailing .0</span>
+<span class="nv">MINDER_CAM_USER</span><span class="o">=</span>admin<span class="w">      </span><span class="c1"># your cameras' login</span>
+<span class="nv">MINDER_CAM_PASS</span><span class="o">=</span>...
+</code></pre></div>
+<p><code>MINDER_SUBNET</code> is a prefix, not CIDR: Minder appends <code>.0/24</code> itself, so <code>192.168.0</code> scans
+<code>192.168.0.0/24</code>. Run <code>hostname -I</code> and drop the last number to get yours.</p>
+<p>Telegram, Home Assistant and cloud AI are all set up later through the web interface — nothing here
+needs them.</p>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.env<span class="w">                 </span><span class="c1"># it will hold passwords and tokens</span>
+</code></pre></div>
+<h3 id="5-start-it">5. Start it<a class="headerlink" href="#5-start-it" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>The first run downloads a few GB and takes 10–20 minutes. Watch it with:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>minder
+</code></pre></div>
+<p>It is ready when you see <code>Application startup complete</code>.</p>
+<h3 id="6-set-it-up">6. Set it up<a class="headerlink" href="#6-set-it-up" title="Permanent link">&para;</a></h3>
+<p>Open the web interface in a browser on the same network:</p>
+<div class="highlight"><pre><span></span><code>hostname<span class="w"> </span>-I<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="w">    </span><span class="c1"># e.g. 192.168.0.42 → open http://192.168.0.42</span>
+</code></pre></div>
+<p><strong>Use the IP address.</strong> You will see <code>http://minder.local</code> in older notes; that only resolves if the
+host is actually named <code>minder</code> <em>and</em> is running an mDNS responder (<code>avahi-daemon</code> on Linux, Bonjour
+on macOS). Neither is installed by Minder, so on a fresh box the name will not work and the IP
+always will. If you want the friendly name:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>minder
+sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>avahi-daemon
+</code></pre></div>
+<p>Then:</p>
+<ol>
+<li><strong>Add cameras.</strong> Minder scans your network and lists what it finds. Confirm the ones you want and
+   give each a name you would actually say out loud — "Main Door", "Pathway Gate", "Driveway". Those
+   names are what you use when talking to it.</li>
+<li><strong>Connect a messaging channel.</strong> Telegram or Discord. Scan the QR code, and the bot will message
+   you to confirm.</li>
+<li><strong>Connect Home Assistant</strong> if you have smart devices. Minder discovers them; you pick which it
+   may control.</li>
+</ol>
+<p>That is the whole setup. Everything else is conversation.</p>
+<h3 id="keeping-it-running">Keeping it running<a class="headerlink" href="#keeping-it-running" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps<span class="w">                  </span><span class="c1"># what's up</span>
+docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>minder<span class="w">      </span><span class="c1"># what it's doing</span>
+docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>minder<span class="w">      </span><span class="c1"># if something seems stuck</span>
+docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w">                </span><span class="c1"># stop everything (your data is kept)</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">               </span><span class="c1"># start again</span>
+</code></pre></div>
+<p>Minder backs itself up nightly to <code>~/minder/backups</code>. To update:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/minder<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+</code></pre></div>
+<h2 id="talking-to-it">Talking to it<a class="headerlink" href="#talking-to-it" title="Permanent link">&para;</a></h2>
+<p>Just write normally. Minder works out what you meant.</p>
+<p><strong>Ask what it sees</strong></p>
+<blockquote>
+<p>"is someone at the main door"
+"do you see anyone outside?"
+"is the gate open?"
+"is there a car in the driveway"
+"show me the porch"</p>
+</blockquote>
+<p>It looks at the camera <em>now</em>, describes what is actually in frame, and sends the snapshot.</p>
+<p><strong>Control things</strong></p>
+<blockquote>
+<p>"turn off the pressure pump"
+"switch on the solar heater"</p>
+</blockquote>
+<p><strong>Set up rules</strong> — this is the part people underuse:</p>
+<blockquote>
+<p>"turn on the pump when there is a person at the main door"
+"every night at 9pm turn on the porch light"
+"switch off the pump when the water level is reached"</p>
+</blockquote>
+<p>Minder writes the rule, shows it back to you, and runs it from then on. You can list and remove rules
+the same way.</p>
+<p><strong>Ask about the house</strong></p>
+<blockquote>
+<p>"what cameras do I have"
+"what smart devices are connected"
+"is it raining outside?"
+"anything at the door today?"</p>
+</blockquote>
+<h3 id="if-it-misunderstands-you">If it misunderstands you<a class="headerlink" href="#if-it-misunderstands-you" title="Permanent link">&para;</a></h3>
+<p>It gets the intent right about <strong>9 times in 10</strong> — that is measured, not a guess, across 166 real
+phrasings (<code>scripts/bench_router.py</code> if you want to run it yourself). The tenth time, three things
+help:</p>
+<ul>
+<li><strong>Name the camera.</strong> "anything on bedroom deck" is more reliable than "anything out back", because
+  Minder matches your configured camera names exactly. Names it does not know ("the veranda") are
+  where it struggles most.</li>
+<li><strong>Say what you want done.</strong> "turn the pump <em>off</em>" rather than "the pump" — a command without an
+  action reads as a question about your devices.</li>
+<li><strong>Say <em>when</em> for a rule.</strong> "turn on the pump <strong>when</strong> someone is at the door" creates a standing
+  rule; without a when/if/every, the same words are treated as "do it now".</li>
+</ul>
+<p>Every message you send is recorded with what Minder thought you meant, so misreadings can be found
+and fixed rather than guessed at. Set <code>MINDER_ROUTER_LOG=off</code> if you would rather it did not.</p>
+<h2 id="knowing-who-is-who-optional">Knowing who is who (optional)<a class="headerlink" href="#knowing-who-is-who-optional" title="Permanent link">&para;</a></h2>
+<p>Minder can put names to faces — but only for people you deliberately enrol, and only if you install
+the face plugins. Nothing about faces is stored or computed until you do.</p>
+<p>The most useful thing it does needs <strong>no</strong> enrolment at all: telling you that someone is a
+<strong>stranger</strong>. A stranger is a face that matched nobody, so <em>"alert me if an unrecognised face is at
+the gate after dark"</em> works for people who have never been near your house.</p>
+<p>If you also enrol the people who live and work there, alerts can say <em>"Alex at the main door"</em>
+instead of <em>"person at the main door"</em>, and you can write rules about groups — <em>"anyone who is not
+family, after 10pm"</em>.</p>
+<p><strong>A recognised face never silences an alert.</strong> It changes the words, never whether you are told. So
+if it misidentifies someone, you get a wrong name — never a missed intruder.</p>
+<p>Setup, groups, rules, and how to delete someone: <a href="../face-recognition/">Face detection and recognition</a>.</p>
+<h2 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h2>
+<p>When a camera detects something worth telling you about, Minder sends a message with a snapshot and
+a short description of what it is — not just "motion detected", but what is actually there.</p>
+<p><strong>If you get too many alerts</strong>, say so: <em>"stop alerting me about cars in the driveway"</em>, or set quiet
+hours. Alerting rules are rules like any other.</p>
+<p><strong>If you are missing alerts</strong>, check the camera is armed in the web UI. Minder only alerts on cameras
+you have armed.</p>
+<h2 id="snapshots-video-and-history">Snapshots, video and history<a class="headerlink" href="#snapshots-video-and-history" title="Permanent link">&para;</a></h2>
+<p>Every alert is kept. In the web UI you can scroll back through events, view the snapshot or the clip,
+and mark things as seen. Ask in chat too: <em>"anything at the gate yesterday?"</em></p>
+<h2 id="when-minder-asks-you-something">When Minder asks you something<a class="headerlink" href="#when-minder-asks-you-something" title="Permanent link">&para;</a></h2>
+<p>Minder runs a health check every six hours. If it finds a problem it can fix — a camera that dropped
+off, a service that needs restarting — <strong>it asks you first</strong> and waits.</p>
+<p>It never repairs anything on its own. Reply to approve, or ignore it and nothing happens.</p>
+<h2 id="privacy">Privacy<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
+<p>By default <strong>nothing leaves your house.</strong> Camera images are analysed by a model running on the
+appliance itself.</p>
+<p>Cloud AI is opt-in and used only when you turn it on — it is better at detailed scene descriptions,
+and it is what powers one-time training when you teach Minder to recognise something new. When it is
+off, Minder still works; descriptions are just less detailed.</p>
+<p>Your recordings are never uploaded. Snapshots go to a cloud model only if you enabled cloud vision,
+and only for the specific question being asked.</p>
+<h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>What you see</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Bot does not reply</td>
+<td>Check the appliance is on — the web interface at its IP should load.</td>
+</tr>
+<tr>
+<td>"I can't reach that camera"</td>
+<td>The camera is offline or changed IP. Re-run discovery in the web UI.</td>
+</tr>
+<tr>
+<td>Alerts stopped</td>
+<td>Check the camera is still armed, and that quiet hours are not on.</td>
+</tr>
+<tr>
+<td>Device won't switch</td>
+<td>Home Assistant may have lost the device. Ask <em>"diagnose"</em> and Minder will check.</td>
+</tr>
+<tr>
+<td>Everything seems stuck</td>
+<td>Ask <em>"diagnose"</em>. Minder checks itself and reports what is wrong.</td>
+</tr>
+</tbody>
+</table>
+<p>If you need to start clean, the web UI has a <strong>backup and restore</strong> page. Minder backs itself up
+nightly, so restoring is usually faster than reconfiguring.</p>
+<h2 id="where-the-appliance-lives">Where the appliance lives<a class="headerlink" href="#where-the-appliance-lives" title="Permanent link">&para;</a></h2>
+<p>Minder runs from <code>~/minder</code> on the host, as a set of Docker containers. Day to day you should never
+need to touch that — but if you want the technical picture, see
+<a href="../architecture/">the architecture guide</a>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.sections", "navigation.expand", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
