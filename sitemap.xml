@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
-         <loc>https://delivstat.github.io/minder/</loc>
+         <loc>https://delivstat.github.io/minder-docs/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
     <url>
-         <loc>https://delivstat.github.io/minder/architecture/</loc>
+         <loc>https://delivstat.github.io/minder-docs/architecture/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
     <url>
-         <loc>https://delivstat.github.io/minder/face-recognition/</loc>
+         <loc>https://delivstat.github.io/minder-docs/face-recognition/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
     <url>
-         <loc>https://delivstat.github.io/minder/privacy/</loc>
+         <loc>https://delivstat.github.io/minder-docs/privacy/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
     <url>
-         <loc>https://delivstat.github.io/minder/using-minder/</loc>
+         <loc>https://delivstat.github.io/minder-docs/using-minder/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
     <url>
-         <loc>https://delivstat.github.io/minder/walkthrough/</loc>
+         <loc>https://delivstat.github.io/minder-docs/walkthrough/</loc>
          <lastmod>2026-08-25</lastmod>
     </url>
 </urlset>
