@@ -956,7 +956,7 @@ overloading the box.</p>
 <p><strong>3. Switch plugins on for the appliance.</strong> In <code>.env</code>:</p>
 <div class="highlight"><pre><span></span><code>MINDER_PLUGINS=on
 </code></pre></div>
-<p>then <code>docker compose up -d minder</code>. This is the master switch — off by default, because optional
+<p>then <code>./minder up</code>. This is the master switch — off by default, because optional
 perception on a machine whose first job is recording your house should be turned on deliberately.</p>
 <h3 id="check-it-worked">Check it worked<a class="headerlink" href="#check-it-worked" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>minder<span class="w"> </span>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">"</span>

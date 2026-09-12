@@ -373,10 +373,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-two-models" class="md-nav__link">
+  <a href="#2-ollama-and-three-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and two models
+        2. Ollama, and three models
       
     </span>
   </a>
@@ -787,10 +787,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-two-models" class="md-nav__link">
+  <a href="#2-ollama-and-three-models" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and two models
+        2. Ollama, and three models
       
     </span>
   </a>
@@ -996,6 +996,10 @@ code.</p>
 </ul>
 <p>Optional but recommended: a <strong>Home Assistant</strong>-compatible smart device or two, if you want Minder to
 switch things on and off. Home Assistant itself is installed for you — it is part of the stack.</p>
+<p>Also optional: <strong>an AI accelerator</strong> — an NVIDIA GPU, an Intel iGPU, a Coral or Hailo stick, or a
+board with a built-in NPU. Minder runs perfectly well without one. If you have one, the setup in
+step 5 finds it, tells you what else it needs, and — importantly — tells you when it is <em>not</em> being
+used, which otherwise looks exactly like not having one.</p>
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <h3 id="1-docker">1. Docker<a class="headerlink" href="#1-docker" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
@@ -1003,15 +1007,22 @@ sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> <
 newgrp<span class="w"> </span>docker<span class="w">                      </span><span class="c1"># or just log out and back in</span>
 </code></pre></div>
 <p>Check it works: <code>docker run --rm hello-world</code>.</p>
-<h3 id="2-ollama-and-two-models">2. Ollama, and two models<a class="headerlink" href="#2-ollama-and-two-models" title="Permanent link">&para;</a></h3>
+<h3 id="2-ollama-and-three-models">2. Ollama, and three models<a class="headerlink" href="#2-ollama-and-three-models" title="Permanent link">&para;</a></h3>
 <p>Minder's language and vision models run <strong>on the host</strong>, not in a container — that is what keeps
 your camera images inside the house.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 
-ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:3b<span class="w">       </span><span class="c1"># understands what you ask</span>
-ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5vl:3b<span class="w">     </span><span class="c1"># looks at camera frames</span>
+ollama<span class="w"> </span>pull<span class="w"> </span>qwen3.5:4b-q4_K_M<span class="w">   </span><span class="c1"># works out what you are asking for</span>
+ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:3b<span class="w">          </span><span class="c1"># reasoning and tool use</span>
+ollama<span class="w"> </span>pull<span class="w"> </span>gemma3:4b<span class="w">           </span><span class="c1"># looks at camera frames</span>
 </code></pre></div>
-<p>Roughly 5GB total. They run on CPU; no GPU required.</p>
+<p>Roughly 8GB total. They run on CPU; no GPU required — a GPU makes the vision answers roughly four
+times faster, and Minder will use one if you have it (see step 5).</p>
+<p>These are the defaults and you can change any of them later, but do not guess at substitutes: the
+vision model in particular was chosen on a benchmark over real camera frames, and the obvious
+alternatives failed in ways that matter. One faster, smaller model described <em>"a nighttime scene of
+a porch with a lit lamp and a door"</em> on a frame that was a blank error screen. <code>MODELS.md</code> in the
+repository has the comparison.</p>
 <p>Use a recent Ollama if you can — <strong>0.32 or newer</strong>. Upgrading from 0.21 made Minder's routing more
 than twice as fast on the same model, and older builds quietly ignore the structured-output format
 for newer model families, which makes them look broken when they are not.</p>
@@ -1021,6 +1032,9 @@ and <code>MINDER_DESCRIBE_PROVIDER=openrouter</code>. It is faster and more deta
 then leave your network.</p>
 </blockquote>
 <h3 id="3-get-minder">3. Get Minder<a class="headerlink" href="#3-get-minder" title="Permanent link">&para;</a></h3>
+<p>Minder is not open source. The repository is private, and this step needs an account that has been
+granted access — if <code>git clone</code> answers <code>Repository not found</code>, that is what it means, not a broken
+link. Everything else on this page is readable without it.</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:delivstat/minder.git<span class="w"> </span>~/minder
 <span class="nb">cd</span><span class="w"> </span>~/minder
 </code></pre></div>
@@ -1044,12 +1058,29 @@ needs them.</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.env<span class="w">                 </span><span class="c1"># it will hold passwords and tokens</span>
 </code></pre></div>
 <h3 id="5-start-it">5. Start it<a class="headerlink" href="#5-start-it" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>bootstrap<span class="w">        </span><span class="c1"># look at this machine, say what it needs, write .env</span>
+./minder<span class="w"> </span>up<span class="w">               </span><span class="c1"># build, start, and wait until Minder can answer</span>
 </code></pre></div>
-<p>The first run downloads a few GB and takes 10–20 minutes. Watch it with:</p>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>minder
+<p><code>bootstrap</code> asks before writing anything, and writes only <code>.env</code>. If your machine has a GPU or an
+AI accelerator it will tell you what else is needed to use it — and what happens if you skip that,
+which differs: an NVIDIA card without its toolkit stops the stack from starting at all, while a
+Coral or Hailo without its driver lets everything start and quietly run on the processor instead.</p>
+<p>The first run downloads a few GB and takes 10–20 minutes. <code>./minder up</code> waits for it and tells you
+when it is ready. To watch:</p>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>logs<span class="w"> </span>minder
 </code></pre></div>
-<p>It is ready when you see <code>Application startup complete</code>.</p>
+<p>It is ready when you see <code>Application startup complete</code> — though <code>./minder up</code> has already
+waited for that, so you only need the logs if something looks wrong.</p>
+<p><strong>Check what it is running on:</strong></p>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>status
+</code></pre></div>
+<p>This is the command to remember. It shows which services are up, which processor is doing the
+vision work, and anything that is working but not the way you configured it. The line to look for:</p>
+<div class="highlight"><pre><span></span><code>!! MISMATCH   host sees 'cuda', container sees 'generic-cpu'
+              the accelerator is not reaching Minder — it is running on the CPU
+</code></pre></div>
+<p>That means you have hardware Minder cannot reach — everything works, just slowly, and nothing else
+would have told you.</p>
 <h3 id="6-set-it-up">6. Set it up<a class="headerlink" href="#6-set-it-up" title="Permanent link">&para;</a></h3>
 <p>Open the web interface in a browser on the same network:</p>
 <div class="highlight"><pre><span></span><code>hostname<span class="w"> </span>-I<span class="w"> </span><span class="p">|</span><span class="w"> </span>awk<span class="w"> </span><span class="s1">'{print $1}'</span><span class="w">    </span><span class="c1"># e.g. 192.168.0.42 → open http://192.168.0.42</span>
@@ -1073,14 +1104,17 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </ol>
 <p>That is the whole setup. Everything else is conversation.</p>
 <h3 id="keeping-it-running">Keeping it running<a class="headerlink" href="#keeping-it-running" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>ps<span class="w">                  </span><span class="c1"># what's up</span>
-docker<span class="w"> </span>compose<span class="w"> </span>logs<span class="w"> </span>-f<span class="w"> </span>minder<span class="w">      </span><span class="c1"># what it's doing</span>
-docker<span class="w"> </span>compose<span class="w"> </span>restart<span class="w"> </span>minder<span class="w">      </span><span class="c1"># if something seems stuck</span>
-docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w">                </span><span class="c1"># stop everything (your data is kept)</span>
-docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w">               </span><span class="c1"># start again</span>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>status<span class="w">                    </span><span class="c1"># what's running, and anything not right</span>
+./minder<span class="w"> </span>logs<span class="w"> </span>minder<span class="w">               </span><span class="c1"># what it's doing</span>
+./minder<span class="w"> </span>restart<span class="w">                   </span><span class="c1"># if something seems stuck</span>
+./minder<span class="w"> </span>down<span class="w">                      </span><span class="c1"># stop everything (your data is kept)</span>
+./minder<span class="w"> </span>up<span class="w">                        </span><span class="c1"># start again</span>
 </code></pre></div>
+<p><code>./minder status</code> is the one to reach for first. As well as which services are up, it reports which
+processor is doing the vision work — and says so plainly when an accelerator you have is not being
+used, which otherwise looks exactly like not having one.</p>
 <p>Minder backs itself up nightly to <code>~/minder/backups</code>. To update:</p>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/minder<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--build
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/minder<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>pull<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>./minder<span class="w"> </span>up
 </code></pre></div>
 <h2 id="talking-to-it">Talking to it<a class="headerlink" href="#talking-to-it" title="Permanent link">&para;</a></h2>
 <p>Just write normally. Minder works out what you meant.</p>
