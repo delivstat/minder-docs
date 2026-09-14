@@ -1711,15 +1711,47 @@ it, <code>scripts/audit_events.py suppressed</code> lays the frames on a sheet. 
 evidence is there and the rule can say <code>verify: off</code>. If Minder <em>cannot</em> look — no frame, the seam
 failed — the alert goes out as before. Live cost: ~1.5 s for the grab and ~0.1 s for the look, ahead
 of a bot that polls every 10 s.</p>
-<p><strong>The root cause is upstream and is not fixed here.</strong> The reference machine has a GPU Frigate does
-not use — the platform profile says <code>cuda</code>, the image target says <code>cpu</code>, and the health page reports
-the mismatch. Frigate on TensorRT would run a real YOLO on the detect stream and most of this would
-never fire. It competes with the VLM for the 4 GB card, so it is a measurement to make, not a default
-to flip; the second opinion is what makes the CPU detector liveable meanwhile.</p>
+<p><strong>The root cause is upstream, and the platform profile can fix it without a GPU.</strong> Frigate's
+OpenVINO detector runs on the CPU — no render node, no compose override — and its <code>yolo-generic</code>
+model type runs the same YOLOv8-n the seam uses, exported at 320 and shipped in the image
+(<code>/app/models/yolov8n-320.onnx</code>). A profile that says so:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">frigate</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">detector</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> ov</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt"> type</span><span class="p">:</span><span class="w"> </span><span class="nv">openvino</span><span class="p p-Indicator">,</span><span class="nt"> device</span><span class="p">:</span><span class="w"> </span><span class="nv">CPU</span><span class="w"> </span><span class="p p-Indicator">}</span><span class="w"> </span><span class="p p-Indicator">}</span>
+<span class="w">  </span><span class="nt">model</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">model_type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yolo-generic</span>
+<span class="w">    </span><span class="nt">width</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">320</span>
+<span class="w">    </span><span class="nt">height</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">320</span>
+<span class="w">    </span><span class="nt">input_tensor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nchw</span>
+<span class="w">    </span><span class="nt">input_dtype</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">float</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/config/model_cache/yolov8n-320.onnx</span>
+<span class="w">    </span><span class="nt">labelmap_path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/labelmap/coco-80.txt</span>
+</code></pre></div>
+<p><code>frigate.model</code> is Frigate's top-level <code>model:</code> block (the description is global in Frigate, not per
+detector). On reconfigure Minder stages the file from the image into Frigate's config volume, and
+withholds the block if the detector fell back to <code>cpu1</code> — a YOLO description handed to the TFLite
+CPU detector is a Frigate that does not start. On the reference box, seven cameras at 5 fps, it
+costs 17 ms per inference against SSDLite's 28 ms, and in its first minutes boxed the two cars on
+the porch as cars at 0.82 with no "person" on either. How all of this was measured, and the
+checklist for repeating it on another installation, is <a href="../detector-tuning/">Detector tuning</a>.</p>
+<p><strong>The detector is only half of it; the other half is the stream.</strong> Run offline over a day of real
+<code>person</code> snapshots, YOLOv8-n at 320 found <strong>0 of 38</strong> children cycling past the far gate — 20 px
+tall in the 352×288 substream, below what any COCO detector resolves — where SSDLite had scored them
+0.7. So a camera can detect on its <strong>main stream</strong> instead: <code>detect: {stream: main, width: 1280,
+height: 720}</code> on the camera record (the "Detect on" select on the dashboard camera card, or
+<code>POST /api/cameras/detect</code>; <code>MINDER_DETECT_STREAM=main</code> makes it the default for every camera).
+Frigate decodes the full stream in software (~0.3 core per camera on the reference box, no
+hardware decode on WSL2), scales to 1280×720, and crops motion regions at that resolution, so the
+same child is 70 px inside the 320 crop. A side effect pays for most of it: at 1280×720 the motion
+gate stops firing on compression noise, and detection on those cameras dropped from a continuous
+5 fps to 0.2 fps. It is per camera because most cameras do not need it; the two that watch far
+approaches do. Both are being measured against the porch's 36-hour record before they become the
+detected default; the second opinion stays either way.</p>
 <h3 id="53-the-alert-in-order">5.3 The alert, in order<a class="headerlink" href="#53-the-alert-in-order" title="Permanent link">&para;</a></h3>
 <p>The text goes out <strong>instantly</strong> — the event has a rule, the second opinion agreed, that is enough.
-Then, in a thread that never blocks the alert path, as each exists: Frigate's boxed snapshot (the box
-is the point of the photo), the description, and the recorded clip. A live event has no snapshot at
+Then, in a thread that never blocks the alert path, as each exists: the photo with its box drawn on
+(the box is the point of the photo — Frigate 0.17 stores its snapshot clean whatever
+<code>snapshots.bounding_box</code> says, so Minder draws it: the seam's box on the 640 px verified frame when
+there is one, Frigate's box on Frigate's snapshot otherwise), the description, and the recorded clip. A live event has no snapshot at
 fire time and no clip until it ends; waiting for either inline would have dropped them.</p>
 <h3 id="54-the-description">5.4 The description<a class="headerlink" href="#54-the-description" title="Permanent link">&para;</a></h3>
 <p>The line under the photo is the most-read thing Minder produces, and it was being written from the

@@ -987,7 +987,7 @@ on.</p>
 </thead>
 <tbody>
 <tr>
-<td>a mathematical template (128 numbers)</td>
+<td>a mathematical template (512 numbers)</td>
 <td><strong>the photograph</strong> — discarded once the template is made</td>
 </tr>
 <tr>
@@ -1047,8 +1047,9 @@ that matched nobody, which is why stranger rules work for people who have never 
 <p><strong>Guests expire.</strong> A guest needs an end date, and the template is deleted automatically after it.
 Someone enrolled for a fortnight's visit will not still be recognised two years later.</p>
 <h2 id="enrolling-someone">Enrolling someone<a class="headerlink" href="#enrolling-someone" title="Permanent link">&para;</a></h2>
-<p>Portal → <strong>People</strong> tab. One person at a time, with a photo where their face is at least 80 pixels
-across.</p>
+<p>Portal → <strong>People</strong> tab. One person at a time, from photographs — three to five, different angles
+and lighting, each with their face at least 80 pixels across. Nobody has to stand in front of a
+camera: enrol at the desk the way a reception would, and every camera recognises them.</p>
 <p>Enrolment only works from a signed-in browser session. Minder's own internal components cannot do
 it, and neither can the chat bot — storing someone's face is a decision a person makes, and the
 record says who made it.</p>
@@ -1161,7 +1162,7 @@ end of a driveway would raise "unrecognised person", and you would turn the rule
 </tr>
 <tr>
 <td>recognising one</td>
-<td>~400ms</td>
+<td>~170ms</td>
 </tr>
 <tr>
 <td>while armed</td>
@@ -1172,7 +1173,8 @@ end of a driveway would raise "unrecognised person", and you would turn the rule
 <p>* Because Minder crops to the person Frigate already found: <strong>2% of the pixels, at full
 resolution</strong> — 50x faster than scanning the whole frame, and sharper than shrinking it.</p>
 <p>The frame grab dominates, and it only happens when a camera has already detected somebody. Nothing
-runs continuously.</p>
+runs continuously. Recognition looks at a short <strong>burst</strong> of five frames half a second apart rather
+than one — the first frame after a detection is usually the worst one — and reports the best.</p>
 <p><strong>Your cameras' detection stream is 352x288, where a face is 15–25 pixels — too small to recognise
 anyone.</strong> That is why these plugins pull a full-resolution frame on demand. A camera whose main
 stream is unreachable cannot serve them, and the plugin list says which.</p>

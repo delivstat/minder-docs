@@ -1067,6 +1067,9 @@ Minder comes up empty and looks like it lost everything.</p>
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 nano<span class="w"> </span>.env
 </code></pre></div>
+<p><code>.env.example</code> is the short list. Every variable the stack takes — 87 of them, with the default
+and the reasoning — is in <code>env.sample</code>, generated from the compose file so it is always current;
+copy a line from there into <code>.env</code> to change it.</p>
 <p>You can genuinely leave all of it blank on a first run — the web interface auto-detects your
 network and asks for camera credentials during onboarding. Fill these in only if discovery does not
 find your cameras:</p>
