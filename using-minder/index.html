@@ -350,6 +350,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -775,6 +786,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#hardware" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Hardware
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#installing" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1012,7 +1034,8 @@ code.</p>
 <p>You need:</p>
 <ul>
 <li><strong>A machine that stays on</strong> — a mini PC, a NUC, an old laptop. Linux (this is developed on Ubuntu
-  under WSL2 and on bare Ubuntu). 16GB RAM is comfortable; 8GB works if you use cloud vision.</li>
+  under WSL2 and on bare Ubuntu). See <a href="#hardware">Hardware</a> below for what it needs; the short
+  version is 4+ cores, 16GB RAM, and a graphics card is optional.</li>
 <li><strong>Cameras that speak RTSP.</strong> Almost all IP cameras do. You will need their username and password.</li>
 <li><strong>A Telegram or Discord account</strong> to talk to it.</li>
 </ul>
@@ -1022,6 +1045,73 @@ switch things on and off. Home Assistant itself is installed for you — it is p
 board with a built-in NPU. Minder runs perfectly well without one. If you have one, the setup in
 step 5 finds it, tells you what else it needs, and — importantly — tells you when it is <em>not</em> being
 used, which otherwise looks exactly like not having one.</p>
+<h2 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">&para;</a></h2>
+<p>Minder runs one local model (gemma3:4b) and Frigate's detector on the CPU, so the machine needs
+less than a first guess suggests. These are measurements from the reference house — seven cameras,
+two of them detecting on their full-resolution stream, face recognition on, an 8-core i7-8750H with
+a 4GB GTX 1050 Ti — not estimates:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>measured</th>
+<th>what drives it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>graphics memory</td>
+<td><strong>2.9GB</strong></td>
+<td>the one model, resident; the 4GB card runs at 3.7GB used</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td><strong>~3.5 cores</strong></td>
+<td>Frigate: video decode (~0.3 core per camera on the main stream, ~0.1 on the substream) plus the detector (~1 core); Minder itself idles at 0.1</td>
+</tr>
+<tr>
+<td>RAM</td>
+<td><strong>~3.5GB</strong></td>
+<td>all containers; add ~3GB if the model runs on the CPU</td>
+</tr>
+<tr>
+<td>disk</td>
+<td>~1GB/day/camera</td>
+<td>recordings, at the default two-day retention</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Three builds that work:</strong></p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>machine</th>
+<th>what you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Budget, no graphics card</strong></td>
+<td>Intel N100/N305 mini PC, 16GB RAM, 512GB NVMe</td>
+<td>Everything works. The model runs on the CPU, so a description takes ~30s instead of ~7s and a routed answer 5–8s. Fine for up to about six cameras on their substreams.</td>
+</tr>
+<tr>
+<td><strong>Recommended</strong></td>
+<td>any 6-core Intel with an iGPU (i5-8400 or newer, i5-12400), a used <strong>6GB</strong> NVIDIA card (GTX 1660, RTX 3050), 16GB RAM, 1TB NVMe</td>
+<td>This is the reference box's class. Seven cameras, two on full-resolution detection, the card mostly idle, ~3GB of graphics memory spare for a longer context or a bigger model later. On bare Ubuntu the Intel iGPU also takes the video decode, which is most of the CPU load.</td>
+</tr>
+<tr>
+<td><strong>Headroom</strong></td>
+<td>the same with an RTX 3060 12GB</td>
+<td>Only if you intend to run a 12B vision model or higher-resolution description without the cloud. Today ~9GB of it would sit idle.</td>
+</tr>
+</tbody>
+</table>
+<p>Three things that are <em>not</em> true any more, in case you read them elsewhere: you do not need two
+models pulled; you do not need a 12GB card; and the graphics card does not help Frigate's detection
+— that runs on the CPU (OpenVINO), where it costs 17ms a frame on the reference box. A 4GB card is
+proven; 6GB is the sweet spot; RAM is the thing not to skimp on.</p>
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <h3 id="1-docker">1. Docker<a class="headerlink" href="#1-docker" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
