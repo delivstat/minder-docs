@@ -1456,8 +1456,9 @@ building unless you turn a cloud tier on.</p>
 </table>
 <p><strong>Ollama is a host process, not a container.</strong> The models are reached over <code>localhost:11434</code>. That
 keeps camera frames on the host and lets the GPU be shared by exactly one thing; it also means a
-fresh machine needs two models pulled before the stack is useful — <code>gemma3:4b</code> (routing <em>and</em>
-vision, one resident model) and <code>qwen2.5:3b</code> (the tool-using agents). <code>MODELS.md</code> lists every model,
+fresh machine needs one model pulled before the stack is useful — <code>gemma3:4b</code>, which is the router,
+the chat and the VLM. There is no tool-calling model: setup, discovery, device control and the
+doctor are code, and work with Ollama not running. <code>MODELS.md</code> lists every model,
 which property sets it and the benchmark behind each choice, and is <strong>generated from the
 repository</strong> because an inventory assembled by hand from five places is the document most certain
 to rot.</p>
@@ -1469,9 +1470,12 @@ python3 /app/bot.py                         # Telegram adapter
 python3 /app/discord_bot.py                 # Discord adapter
 </code></pre></div>
 <p>The swarm runs on <a href="https://github.com/delivstat/swarmkit">SwarmKit</a>, pinned once as
-<code>SWARMKIT_VERSION</code> in <code>docker-compose.yml</code>, consumed from PyPI. Tools reach it as <strong>four MCP servers</strong>
-(<code>camera</code>, <code>tuya</code> — Home Assistant —, <code>doctor</code>, <code>frigate</code>), each a stdio subprocess the runtime
-governs: every tool call is policy-checked and audited.</p>
+<code>SWARMKIT_VERSION</code> in <code>docker-compose.yml</code>, consumed from PyPI. It runs <strong>no tools</strong>: the model turns
+language into a plan and describes what it sees; the capability modules (<code>mcp-servers/camera</code>,
+<code>tuya</code> — Home Assistant —, <code>frigate</code>, <code>detect</code>) are plain functions the webapp calls in-process.
+They were once wired to the runtime as MCP servers for tool-calling setup topologies, which meant a
+second LLM had to be pulled and running before a single camera could be found; that model only ever
+relayed the function's result, and is gone.</p>
 <hr />
 <h2 id="3-the-principles">3. The principles<a class="headerlink" href="#3-the-principles" title="Permanent link">&para;</a></h2>
 <p>Five rules recur in every subsystem. They are stated once here so the sections can refer to them.</p>
@@ -1915,8 +1919,9 @@ adapters, the poll loop — with hysteresis (two consecutive failures before <em
 not be mistaken for a hung one. Alongside liveness it carries the rows this document keeps returning
 to — the inference role and its fallback reason, the platform-vs-container mismatch, Frigate's
 detector, the alerts the second opinion suppressed.</p>
-<p><strong>The doctor</strong> is a topology on a six-hour schedule: system health, a diagnosis, a backup.
-Backups are nightly to a host bind mount (<code>backups/</code>), restored from the dashboard.</p>
+<p><strong>The doctor</strong> is a read-only check on the health monitor's loop, every six hours and at startup:
+are the precious state files intact; if not, file a human-gated repair and say so. It is code, not
+a model run. Backups are nightly to a host bind mount (<code>backups/</code>), restored from the dashboard.</p>
 <h3 id="operating-it">Operating it<a class="headerlink" href="#operating-it" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/minder
 ./minder<span class="w"> </span>bootstrap<span class="w">                </span><span class="c1"># first time: detect the hardware, write .env</span>
@@ -2060,8 +2065,8 @@ adapter that was down gets its backlog when it returns, and a blocked channel ne
 others. The dashboard is a subscriber too.</p>
 <p><strong>The dashboard</strong> (port 80) is onboarding — discover cameras, pair Home Assistant, choose a channel,
 pair a phone with a QR invite — and the operator's view: health, rules, zones, enrolled faces,
-history, backups. Session-cookie auth; the ops API is also reachable by the adapters and the doctor
-with an internal token that never leaves the box.</p>
+history, backups. Session-cookie auth; the ops API is also reachable by the adapters with an
+internal token that never leaves the box.</p>
 <hr />
 <h2 id="13-state-tests-and-the-discipline-around-them">13. State, tests, and the discipline around them<a class="headerlink" href="#13-state-tests-and-the-discipline-around-them" title="Permanent link">&para;</a></h2>
 <h3 id="state">State<a class="headerlink" href="#state" title="Permanent link">&para;</a></h3>

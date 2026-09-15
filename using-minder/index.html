@@ -373,10 +373,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-two-models" class="md-nav__link">
+  <a href="#2-ollama-and-one-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and two models
+        2. Ollama, and one model
       
     </span>
   </a>
@@ -798,10 +798,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-two-models" class="md-nav__link">
+  <a href="#2-ollama-and-one-model" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and two models
+        2. Ollama, and one model
       
     </span>
   </a>
@@ -1029,16 +1029,17 @@ sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> <
 newgrp<span class="w"> </span>docker<span class="w">                      </span><span class="c1"># or just log out and back in</span>
 </code></pre></div>
 <p>Check it works: <code>docker run --rm hello-world</code>.</p>
-<h3 id="2-ollama-and-two-models">2. Ollama, and two models<a class="headerlink" href="#2-ollama-and-two-models" title="Permanent link">&para;</a></h3>
-<p>Minder's language and vision models run <strong>on the host</strong>, not in a container — that is what keeps
+<h3 id="2-ollama-and-one-model">2. Ollama, and one model<a class="headerlink" href="#2-ollama-and-one-model" title="Permanent link">&para;</a></h3>
+<p>Minder's language and vision model runs <strong>on the host</strong>, not in a container — that is what keeps
 your camera images inside the house.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
 
 ollama<span class="w"> </span>pull<span class="w"> </span>gemma3:4b<span class="w">           </span><span class="c1"># looks at camera frames AND works out what you are asking for</span>
-ollama<span class="w"> </span>pull<span class="w"> </span>qwen2.5:3b<span class="w">          </span><span class="c1"># reasoning and tool use (setup, discovery, the doctor)</span>
 </code></pre></div>
-<p>Roughly 5GB total. One model does both routing and vision on purpose: a 4GB graphics card holds one
-model of this size, and two would evict each other on every message. They run on CPU; no GPU
+<p>About 3.3GB. One model, on purpose: it works out what you are asking, chats, and looks at frames,
+and a 4GB graphics card holds one model of this size — two would evict each other on every
+message. Setup, camera discovery, device control and the health check are plain code and need no
+model at all; the appliance sets itself up with Ollama not yet running. It runs on CPU; no GPU
 required — a GPU makes the vision answers roughly four times faster, and Minder will use one if you
 have it (see step 5).</p>
 <p>These are the defaults and you can change any of them later, but do not guess at substitutes: the
