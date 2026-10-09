@@ -16,7 +16,7 @@
         <link rel="prev" href="../walkthrough/">
       
       
-        <link rel="next" href="../architecture/">
+        <link rel="next" href="../search/">
       
       
         
@@ -306,6 +306,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../hardware-sizing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../walkthrough/" class="md-nav__link">
         
   
@@ -348,10 +375,10 @@
       
         
         
-        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -369,8 +396,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -597,6 +624,45 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#choosing-the-recognition-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the recognition model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing the recognition model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#downloads-are-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Downloads are automatic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-costs-one-re-enrolment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching costs one re-enrolment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#turning-it-off" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -630,6 +696,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Searching what the cameras saw
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -861,6 +954,45 @@
       
     </span>
   </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#choosing-the-recognition-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Choosing the recognition model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Choosing the recognition model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#downloads-are-automatic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Downloads are automatic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#switching-costs-one-re-enrolment" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching costs one re-enrolment
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
   
 </li>
       
@@ -1178,6 +1310,95 @@ than one — the first frame after a detection is usually the worst one — and 
 <p><strong>Your cameras' detection stream is 352x288, where a face is 15–25 pixels — too small to recognise
 anyone.</strong> That is why these plugins pull a full-resolution frame on demand. A camera whose main
 stream is unreachable cannot serve them, and the plugin list says which.</p>
+<h2 id="choosing-the-recognition-model">Choosing the recognition model<a class="headerlink" href="#choosing-the-recognition-model" title="Permanent link">&para;</a></h2>
+<p>Face recognition can use one of two networks. Both take the same aligned face and produce the
+same kind of template, so everything else (enrolment, groups, rules, the portal) works identically.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Licence</th>
+<th>Use it when</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>insightface</code> (default)</td>
+<td><strong>non-commercial research only</strong> (InsightFace's model licence)</td>
+<td>a household running Minder for itself. It's the most accurate</td>
+</tr>
+<tr>
+<td><code>auraface</code></td>
+<td><strong>Apache-2.0</strong>, trained on commercially licensed data</td>
+<td>Minder is part of a product or a paid service</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How much accuracy the licence costs.</strong> On a standard face benchmark, with both models tuned to
+name the wrong person no more than about three times in a million:</p>
+<table>
+<thead>
+<tr>
+<th>Face size</th>
+<th><code>insightface</code> recognises</th>
+<th><code>auraface</code> recognises</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>full photo</td>
+<td>97.7%</td>
+<td>77.3%</td>
+</tr>
+<tr>
+<td>70 px (a typical door camera)</td>
+<td>98.0%</td>
+<td>77.7%</td>
+</tr>
+<tr>
+<td>50 px</td>
+<td>97.0%</td>
+<td>71.0%</td>
+</tr>
+</tbody>
+</table>
+<p>So AuraFace leaves about <strong>one sighting in four</strong> of a known person unnamed. They show as
+"unrecognised", never as somebody else. You can make it name more people by lowering its threshold
+(<code>MINDER_FACE_MATCH_THRESHOLD</code>), at the cost of more wrong names. Real cameras do worse than the
+benchmark for both.</p>
+<p>Pick one <strong>before</strong> installing the plugin by setting <code>MINDER_FACE_MODEL=auraface</code> in <code>.env</code>, and
+only that model is downloaded. A box that must not carry the non-commercial model never fetches it.</p>
+<h3 id="downloads-are-automatic">Downloads are automatic<a class="headerlink" href="#downloads-are-automatic" title="Permanent link">&para;</a></h3>
+<p>Every model is fetched for you, from a fixed, pinned source, and checked against its checksum.
+Nothing is kept if a check fails. There's nothing to download or place by hand.</p>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>face-model<span class="w"> </span>status<span class="w">             </span><span class="c1"># which model is active, which are installed, who is enrolled under each</span>
+./minder<span class="w"> </span>face-model<span class="w"> </span>install<span class="w"> </span>auraface<span class="w">   </span><span class="c1"># add AuraFace beside the active model</span>
+./minder<span class="w"> </span>face-model<span class="w"> </span>use<span class="w"> </span>auraface<span class="w">       </span><span class="c1"># switch (installs first if needed)</span>
+./minder<span class="w"> </span>face-model<span class="w"> </span>use<span class="w"> </span>insightface<span class="w">    </span><span class="c1"># switch back; nothing is lost</span>
+</code></pre></div>
+<h3 id="switching-costs-one-re-enrolment">Switching costs one re-enrolment<a class="headerlink" href="#switching-costs-one-re-enrolment" title="Permanent link">&para;</a></h3>
+<p>A template belongs to the model that made it, and Minder never compares one model's templates with
+another's. Your enrolment photographs aren't kept: they're deleted the moment the template is
+made. So after a switch, <strong>anyone enrolled only under the old model has to be enrolled again</strong>.
+The People page flags them.</p>
+<p>To switch without a gap:</p>
+<ol>
+<li><code>./minder face-model install auraface</code>. Both models are now installed; the old one is still in
+   charge.</li>
+<li><strong>Re-enrol each person once.</strong> While both are installed, every enrolment makes a template for
+   both models.</li>
+<li>Leave it a few days. The installed-but-inactive model quietly scores every face too, and its
+   answer appears beside the real one in the history (<code>· shadow auraface: Alex 0.52</code>). It never
+   names anyone on its own.</li>
+<li><code>./minder face-model use auraface</code> when you're satisfied. Anyone enrolled in step 2 is
+   recognised from the first face.</li>
+</ol>
+<p>Each model has its own match threshold, set in the plugin manifest. <code>MINDER_FACE_MATCH_THRESHOLD</code>
+overrides it if you have measured your own (<code>scripts/measure_face_threshold.py</code>).</p>
+<p><strong>Neither model fixes a poor view of a face.</strong> On clean photos both hold up down to about 70 px.
+A real door camera's 60–70 px face, seen from above, mid-stride and slightly blurred, can score
+below the threshold even with <code>insightface</code>. Move the camera closer to head height, or use a
+sharper one.</p>
 <h2 id="turning-it-off">Turning it off<a class="headerlink" href="#turning-it-off" title="Permanent link">&para;</a></h2>
 <p>Three different "off", and they mean different things:</p>
 <table>
@@ -1194,7 +1415,7 @@ stream is unreachable cannot serve them, and the plugin list says which.</p>
 </tr>
 <tr>
 <td><strong>Uninstall</strong></td>
-<td>removes the plugin and its model; enrolled people remain</td>
+<td>removes the plugin and its model(s); enrolled people remain</td>
 </tr>
 <tr>
 <td><code>MINDER_PLUGINS=off</code></td>

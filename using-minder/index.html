@@ -16,7 +16,7 @@
         <link rel="prev" href="..">
       
       
-        <link rel="next" href="../walkthrough/">
+        <link rel="next" href="../hardware-sizing/">
       
       
         
@@ -384,10 +384,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-one-model" class="md-nav__link">
+  <a href="#2-ollama-and-one-model-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and one model
+        2. Ollama, and one model (optional)
       
     </span>
   </a>
@@ -538,6 +538,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#running-without-a-language-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running without a language model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privacy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -574,6 +585,33 @@
   
 </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../hardware-sizing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -627,10 +665,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -648,8 +686,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -690,6 +728,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Searching what the cameras saw
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -820,10 +885,10 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#2-ollama-and-one-model" class="md-nav__link">
+  <a href="#2-ollama-and-one-model-optional" class="md-nav__link">
     <span class="md-ellipsis">
       
-        2. Ollama, and one model
+        2. Ollama, and one model (optional)
       
     </span>
   </a>
@@ -967,6 +1032,17 @@
     <span class="md-ellipsis">
       
         When Minder asks you something
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#running-without-a-language-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Running without a language model
       
     </span>
   </a>
@@ -1108,10 +1184,14 @@ a 4GB GTX 1050 Ti — not estimates:</p>
 </tr>
 </tbody>
 </table>
-<p>Three things that are <em>not</em> true any more, in case you read them elsewhere: you do not need two
-models pulled; you do not need a 12GB card; and the graphics card does not help Frigate's detection
-— that runs on the CPU (OpenVINO), where it costs 17ms a frame on the reference box. A 4GB card is
-proven; 6GB is the sweet spot; RAM is the thing not to skimp on.</p>
+<p>Two things that are <em>not</em> true any more, in case you read them elsewhere: you do not need two
+models pulled, and you do not need a 12GB card. A 4GB card is proven; 6GB is the sweet spot; RAM is
+the thing not to skimp on.</p>
+<p>With the model off (<code>MINDER_LLM=off</code>), an NVIDIA card runs Frigate's detector instead: 10–13ms an
+inference on the 1050 Ti against 32ms on the CPU under load, which takes the reference box from a
+saturated detector to 70% idle. With the model on, a 4GB card holds the model, and the detector stays
+on the CPU (OpenVINO). For CPU, GPU and memory <strong>by camera count, in both modes</strong>, see
+<a href="../hardware-sizing/">Hardware sizing</a>.</p>
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <h3 id="1-docker">1. Docker<a class="headerlink" href="#1-docker" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
@@ -1119,7 +1199,10 @@ sudo<span class="w"> </span>usermod<span class="w"> </span>-aG<span class="w"> <
 newgrp<span class="w"> </span>docker<span class="w">                      </span><span class="c1"># or just log out and back in</span>
 </code></pre></div>
 <p>Check it works: <code>docker run --rm hello-world</code>.</p>
-<h3 id="2-ollama-and-one-model">2. Ollama, and one model<a class="headerlink" href="#2-ollama-and-one-model" title="Permanent link">&para;</a></h3>
+<h3 id="2-ollama-and-one-model-optional">2. Ollama, and one model (optional)<a class="headerlink" href="#2-ollama-and-one-model-optional" title="Permanent link">&para;</a></h3>
+<p><strong>Skipping this step is a supported setup.</strong> Minder works without a language model as a
+detection-and-alerting appliance: set <code>MINDER_LLM=off</code> in <code>.env</code> and see <em>Running without a
+language model</em> below.</p>
 <p>Minder's language and vision model runs <strong>on the host</strong>, not in a container — that is what keeps
 your camera images inside the house.</p>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://ollama.com/install.sh<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
@@ -1313,6 +1396,10 @@ ones it did not (no rule, cooldown, or the second look disagreed), each marked a
 times in your clock and the top events with their photos. If a camera was offline for part of the
 window it says so, because "nothing happened" is only true if Minder was looking. The dashboard's
 Events tab has the same query as a form.</p>
+<p>With search switched on (<code>./minder search enable</code>), you can also ask by how something <strong>looked</strong>:
+<em>"show me the light green car this week"</em>, <em>"someone carrying a bag at the door"</em>. Minder answers
+with the closest matching events, best first, and never claims a match is certain. See
+<em>Searching what the cameras saw</em> (<code>search.md</code>).</p>
 <h2 id="snapshots-video-and-history">Snapshots, video and history<a class="headerlink" href="#snapshots-video-and-history" title="Permanent link">&para;</a></h2>
 <p>Every alert is kept. In the web UI you can scroll back through events, view the snapshot or the clip,
 and mark things as seen. Ask in chat too: <em>"anything at the gate yesterday?"</em></p>
@@ -1320,6 +1407,81 @@ and mark things as seen. Ask in chat too: <em>"anything at the gate yesterday?"<
 <p>Minder runs a health check every six hours. If it finds a problem it can fix — a camera that dropped
 off, a service that needs restarting — <strong>it asks you first</strong> and waits.</p>
 <p>It never repairs anything on its own. Reply to approve, or ignore it and nothing happens.</p>
+<h2 id="running-without-a-language-model">Running without a language model<a class="headerlink" href="#running-without-a-language-model" title="Permanent link">&para;</a></h2>
+<p>Set <code>MINDER_LLM=off</code> in <code>.env</code> (then <code>./minder up</code>) and Minder never calls a language model. You
+don't need Ollama at all, and the appliance fits smaller boxes: the model alone needs about 3.7 GB.</p>
+<p><strong>Everything that watches and alerts works exactly the same:</strong></p>
+<ul>
+<li>detection on every camera, rules, and alerts with the photo (every detected object boxed) and
+  the clip;</li>
+<li>face recognition, recognising returning visitors, and detection plugins;</li>
+<li>the full event history, and <em>search</em> if you turn it on (its model is not a language model);</li>
+<li>Home Assistant devices and automations;</li>
+<li>the whole web portal: cameras, live view, events, history, people, rules, settings.</li>
+</ul>
+<p><strong>Chat still answers questions; it just stops chatting.</strong> Messages are understood by code instead
+of a model:</p>
+<table>
+<thead>
+<tr>
+<th>Ask</th>
+<th>Works</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"is anyone at the main door?", "how many cars are on the driveway?"</td>
+<td>✓ checks the camera now</td>
+</tr>
+<tr>
+<td>"show me the porch", "video from the gate"</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>"who was at the door last night?", "what happened this afternoon?", "did Alex come home today?"</td>
+<td>✓ from the history</td>
+</tr>
+<tr>
+<td>"when did someone in a red jacket come by this week?"</td>
+<td>✓ with search on</td>
+</tr>
+<tr>
+<td>"turn off the pump", "list my devices", "list cameras", "weather"</td>
+<td>✓</td>
+</tr>
+<tr>
+<td>"alert me if more than 3 cars are on the driveway"</td>
+<td>✓ count rules</td>
+</tr>
+<tr>
+<td>"what's happening on the porch?"</td>
+<td>what the detector sees there ("Porch: 1 person, 1 car"), not a description in words</td>
+</tr>
+<tr>
+<td>"when someone is at the gate after 10pm, turn on the porch light"</td>
+<td>add it in the portal's Rules tab: other rule sentences need the model</td>
+</tr>
+<tr>
+<td>general conversation</td>
+<td>a short menu of what you can ask</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Two things change with alerts:</strong></p>
+<ul>
+<li>Alert photos come <strong>without the one-line description</strong> of who or what is in them.</li>
+<li>A rule you gave a severity check (a second look by the vision model) <strong>fires as a plain alert
+  marked "unconfirmed"</strong>, because there is no model to confirm it. It still fires, every severity.</li>
+</ul>
+<p><strong>The NVIDIA graphics card, if you have one, moves to detection.</strong> With the model off, Frigate's
+detector runs on the card instead of the CPU: 10–13 ms an inference instead of 32 ms on the
+reference box. It no longer skips frames in rain or wind, and the CPU goes from 70% busy to 70% idle. With
+the model on, a 4 GB card is the model's, and the detector moves back to the CPU, because the two
+sharing one 4 GB card slows both (see <a href="../hardware-sizing/">Hardware sizing</a>). The switch happens
+when Minder starts, so <code>./minder up</code> after changing <code>MINDER_LLM</code> is all it takes. The health page
+shows where the detector runs and why.</p>
+<p>The health page shows the language model as "not used (MINDER_LLM=off)", not as a fault. Set
+<code>MINDER_LLM=on</code> and restart to bring everything back.</p>
 <h2 id="privacy">Privacy<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
 <p>By default <strong>nothing leaves your house.</strong> Camera images are analysed by a model running on the
 appliance itself.</p>

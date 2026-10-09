@@ -304,6 +304,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../hardware-sizing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../walkthrough/" class="md-nav__link">
         
   
@@ -346,10 +373,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -367,8 +394,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -409,6 +436,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Searching what the cameras saw
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -856,6 +910,11 @@ not still be recognised two years later because nobody remembered.</p>
 <td>a separate local database</td>
 <td>until deleted, or a guest expires</td>
 </tr>
+<tr>
+<td>search index (if enabled)</td>
+<td>the event-history database: a numeric summary of each event's picture, not the picture</td>
+<td>until <code>./minder search disable</code>, which deletes it all</td>
+</tr>
 </tbody>
 </table>
 <p>Face templates live in their <strong>own</strong> database rather than alongside events, so "delete everything
@@ -876,6 +935,10 @@ biometric" is one file rather than a search.</p>
 <tr>
 <td><code>MINDER_ROUTER_LOG=off</code></td>
 <td>messages are no longer recorded</td>
+</tr>
+<tr>
+<td><code>./minder search disable</code></td>
+<td>search stops; its model and every indexed event are deleted</td>
 </tr>
 <tr>
 <td>disarm a plugin</td>

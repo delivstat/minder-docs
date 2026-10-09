@@ -13,7 +13,7 @@
         <link rel="canonical" href="https://delivstat.github.io/minder-docs/architecture/">
       
       
-        <link rel="prev" href="../face-recognition/">
+        <link rel="prev" href="../search/">
       
       
         <link rel="next" href="../privacy/">
@@ -306,6 +306,33 @@
   
   
     <li class="md-nav__item">
+      <a href="../hardware-sizing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
       <a href="../walkthrough/" class="md-nav__link">
         
   
@@ -348,10 +375,10 @@
         
           
         
-        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_4" >
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_5" >
         
           
-          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="">
             
   
   
@@ -369,8 +396,8 @@
             <span class="md-nav__icon md-icon"></span>
           </label>
         
-        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
-          <label class="md-nav__title" for="__nav_4">
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
             <span class="md-nav__icon md-icon"></span>
             
   
@@ -411,6 +438,33 @@
           </ul>
         </nav>
       
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Searching what the cameras saw
+  
+
+    
+  </span>
+  
+  
+
+      </a>
     </li>
   
 
@@ -1696,7 +1750,7 @@ dedup/cooldown state, so they can never double-fire.</p>
 <p><strong>Rules match deterministically.</strong> A rule names cameras (or "all", "outside"), a condition whose
 words map to labels, optionally a zone, and actions. Escalate rules outrank plain ones for the same
 event so a broad "person" rule cannot shadow a per-camera "is it a weapon?" gate. Cooldown is per
-camera and condition (<code>MINDER_ALERT_COOLDOWN</code>, 600 s) and a rule may declare its own cadence.</p>
+camera and condition (<code>MINDER_ALERT_COOLDOWN</code>, 30 s) and a rule may declare its own cadence.</p>
 <h3 id="52-the-second-opinion">5.2 The second opinion<a class="headerlink" href="#52-the-second-opinion" title="Permanent link">&para;</a></h3>
 <p>Frigate ships with its default CPU detector — SSDLite MobileNet-v2 at 320×320 — running on a 352×288
 substream. On the reference house it produced 111 <code>person</code> events on one camera in 36 hours. Forty of
