@@ -1193,6 +1193,15 @@ checks at the end.</p>
 </tr>
 </tbody>
 </table>
+<div class="admonition note">
+<p class="admonition-title">Which CPU detector these figures describe</p>
+<p>Every CPU-detector number on this page was measured with Frigate's OpenVINO detector running
+yolov8n at 320×320. A fresh install on an x86 CPU with AVX2 (almost any Intel or AMD CPU from
+the last ten years, the N100 included) gets exactly that. CPUs without AVX2 and ARM boards get
+Frigate's basic <code>cpu</code> detector (SSDLite), which is slower and less accurate, so these figures
+don't describe it. A box set up earlier keeps the profile it was given; re-run detection with
+<code>python3 scripts/platform_detect.py --write --force</code> to move it to OpenVINO.</p>
+</div>
 <p>Measured on 2026-10-09:</p>
 <table>
 <thead>
@@ -1224,7 +1233,7 @@ checks at the end.</p>
 </tr>
 <tr>
 <td>Decode + motion + tracking per camera</td>
-<td>about 0.10–0.12 of one CPU thread (substream or 720p)</td>
+<td>about 0.10–0.12 of one CPU thread, from Frigate's per-camera stats: ffmpeg ~3.7% + capture ~0.6% + process 5–8% for a 352×288 substream; 7.6% + 1.4% + 2.7% for the 1280×720 detect stream</td>
 </tr>
 <tr>
 <td>Memory, per container</td>
@@ -1332,8 +1341,12 @@ about 95/s.</p>
 <li><strong>CPU detector:</strong> each inference per second costs about 0.1 of a thread on this CPU. Budget
   6 inferences/s per camera for peaks, and keep the total under about 80% of the detector's
   capacity.</li>
-<li><strong>Detecting on a full-resolution stream</strong> costs about the same decoding per camera as a
-  substream (measured: 0.12 thread at 720p). Each inference then covers a smaller share of the
+<li><strong>Detecting on a full-resolution stream</strong> cost about the same per camera as a substream in this
+  measurement (0.12 thread for the 1280×720 detect stream). An earlier measurement, taken when
+  main-stream detection was first switched on, put decoding a camera's full-resolution main stream
+  and scaling it to 1280×720 at ~0.3 core (<a href="../detector-tuning/">Detector tuning</a>); the cost follows
+  the resolution of the stream decoded, so budget the higher figure for a high-resolution camera
+  until <code>docker stats</code> says otherwise. Each inference then covers a smaller share of the
   frame, so expect more inferences in busy scenes. This is the remedy for distant subjects that
   the 352×288 substream misses, and a GPU leaves room for it.</li>
 </ul>

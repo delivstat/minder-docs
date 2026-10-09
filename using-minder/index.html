@@ -711,10 +711,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-minder-asks-you-something" class="md-nav__link">
+  <a href="#when-minder-tells-you-something-is-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When Minder asks you something
+        When Minder tells you something is wrong
       
     </span>
   </a>
@@ -1317,10 +1317,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#when-minder-asks-you-something" class="md-nav__link">
+  <a href="#when-minder-tells-you-something-is-wrong" class="md-nav__link">
     <span class="md-ellipsis">
       
-        When Minder asks you something
+        When Minder tells you something is wrong
       
     </span>
   </a>
@@ -1411,10 +1411,9 @@ board with a built-in NPU. Minder runs perfectly well without one. If you have o
 step 5 finds it, tells you what else it needs, and — importantly — tells you when it is <em>not</em> being
 used, which otherwise looks exactly like not having one.</p>
 <h2 id="hardware">Hardware<a class="headerlink" href="#hardware" title="Permanent link">&para;</a></h2>
-<p>Minder runs one local model (gemma3:4b) and Frigate's detector on the CPU, so the machine needs
-less than a first guess suggests. These are measurements from the reference house — seven cameras,
-two of them detecting on their full-resolution stream, face recognition on, an 8-core i7-8750H with
-a 4GB GTX 1050 Ti — not estimates:</p>
+<p>The full guide, by camera count and in both modes, is <a href="../hardware-sizing/">Hardware sizing</a>; this
+is the short version. Its measured figures come from the reference box — an i7-8750H (6 cores / 12
+threads) with a 4 GB GTX 1050 Ti, eight cameras:</p>
 <table>
 <thead>
 <tr>
@@ -1426,27 +1425,31 @@ a 4GB GTX 1050 Ti — not estimates:</p>
 <tbody>
 <tr>
 <td>graphics memory</td>
-<td><strong>2.9GB</strong></td>
-<td>the one model, resident; the 4GB card runs at 3.7GB used</td>
+<td><strong>2.9–3.7 GB</strong> for the model</td>
+<td><code>gemma3:4b</code>, resident (see <em>the model's size</em> below)</td>
 </tr>
 <tr>
 <td>CPU</td>
-<td><strong>~3.5 cores</strong></td>
-<td>Frigate: video decode (~0.3 core per camera on the main stream, ~0.1 on the substream) plus the detector (~1 core); Minder itself idles at 0.1</td>
+<td><strong>the detector sets it</strong></td>
+<td>Frigate's detector on the CPU handled eight cameras at capacity, host ~70% busy; decoding is about 0.1 of a thread per camera on a substream or 720p stream</td>
 </tr>
 <tr>
 <td>RAM</td>
-<td><strong>~3.5GB</strong></td>
-<td>all containers; add ~3GB if the model runs on the CPU</td>
+<td><strong>4.4 GB</strong> of containers at eight cameras</td>
+<td>plus the OS; add 4–8 GB for Ollama with the model loaded</td>
 </tr>
 <tr>
 <td>disk</td>
-<td>~1GB/day/camera</td>
-<td>recordings, at the default two-day retention</td>
+<td>0.9 GB for eight cameras</td>
+<td>recordings of detections and alerts, at the default two-day retention</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Three builds that work:</strong></p>
+<p><strong>The model's size, three ways.</strong> <code>gemma3:4b</code> is a <strong>3.3 GB download</strong>. Loaded on the graphics card
+it takes <strong>2.9 GB at its 4096-token context</strong>, and up to <strong>~3.7 GB</strong> has been measured with an image
+in the prompt — so plan on 3.7 GB, which is why a 4 GB card is the minimum and the detector moves
+off it while the model is on.</p>
+<p><strong>Builds that work:</strong></p>
 <table>
 <thead>
 <tr>
@@ -1457,30 +1460,24 @@ a 4GB GTX 1050 Ti — not estimates:</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>Budget, no graphics card</strong></td>
-<td>Intel N100/N305 mini PC, 16GB RAM, 512GB NVMe</td>
-<td>Everything works. The model runs on the CPU, so a description takes ~30s instead of ~7s and a routed answer 5–8s. Fine for up to about six cameras on their substreams.</td>
+<td><strong>No graphics card</strong></td>
+<td>6 cores / 12 threads, 16 GB RAM</td>
+<td>Everything works. The model runs on the CPU: a description takes ~30 s instead of ~7 s and a routed answer 5–8 s. With the model on, keep to <strong>4 cameras or fewer</strong>; with <code>MINDER_LLM=off</code>, the CPU detector covers more (see the guide).</td>
 </tr>
 <tr>
 <td><strong>Recommended</strong></td>
-<td>any 6-core Intel with an iGPU (i5-8400 or newer, i5-12400), a used <strong>6GB</strong> NVIDIA card (GTX 1660, RTX 3050), 16GB RAM, 1TB NVMe</td>
-<td>This is the reference box's class. Seven cameras, two on full-resolution detection, the card mostly idle, ~3GB of graphics memory spare for a longer context or a bigger model later. On bare Ubuntu the Intel iGPU also takes the video decode, which is most of the CPU load.</td>
+<td>6 cores / 12 threads, a 4 GB or larger NVIDIA card, 16 GB RAM</td>
+<td>The reference box's class: eight cameras, the model on the card, Frigate's detector on the CPU at capacity. A 6–8 GB card can hold the model and the detector together (estimated, not yet measured).</td>
 </tr>
 <tr>
-<td><strong>Headroom</strong></td>
-<td>the same with an RTX 3060 12GB</td>
-<td>Only if you intend to run a 12B vision model or higher-resolution description without the cloud. Today ~9GB of it would sit idle.</td>
+<td><strong>Without the model</strong></td>
+<td>the same CPU, any CUDA card from a GTX 1050 Ti up</td>
+<td><code>MINDER_LLM=off</code>: the card runs Frigate's detector instead — 10–13 ms an inference against 32 ms on the CPU, the reference box going from 70% busy to 70% idle, measured.</td>
 </tr>
 </tbody>
 </table>
-<p>Two things that are <em>not</em> true any more, in case you read them elsewhere: you do not need two
-models pulled, and you do not need a 12GB card. A 4GB card is proven; 6GB is the sweet spot; RAM is
-the thing not to skimp on.</p>
-<p>With the model off (<code>MINDER_LLM=off</code>), an NVIDIA card runs Frigate's detector instead: 10–13ms an
-inference on the 1050 Ti against 32ms on the CPU under load, which takes the reference box from a
-saturated detector to 70% idle. With the model on, a 4GB card holds the model, and the detector stays
-on the CPU (OpenVINO). For CPU, GPU and memory <strong>by camera count, in both modes</strong>, see
-<a href="../hardware-sizing/">Hardware sizing</a>.</p>
+<p>You do not need two models pulled, and you do not need a 12 GB card. RAM is the thing not to skimp
+on.</p>
 <h2 id="installing">Installing<a class="headerlink" href="#installing" title="Permanent link">&para;</a></h2>
 <h3 id="1-docker">1. Docker<a class="headerlink" href="#1-docker" title="Permanent link">&para;</a></h3>
 <div class="highlight"><pre><span></span><code>curl<span class="w"> </span>-fsSL<span class="w"> </span>https://get.docker.com<span class="w"> </span><span class="p">|</span><span class="w"> </span>sh
@@ -1498,7 +1495,8 @@ your camera images inside the house.</p>
 
 ollama<span class="w"> </span>pull<span class="w"> </span>gemma3:4b<span class="w">           </span><span class="c1"># looks at camera frames AND works out what you are asking for</span>
 </code></pre></div>
-<p>About 3.3GB. One model, on purpose: it works out what you are asking, chats, and looks at frames,
+<p>A 3.3 GB download (2.9–3.7 GB of graphics memory once loaded — see <a href="#hardware">Hardware</a>). One
+model, on purpose: it works out what you are asking, chats, and looks at frames,
 and a 4GB graphics card holds one model of this size — two would evict each other on every
 message. Setup, camera discovery, device control and the health check are plain code and need no
 model at all; the appliance sets itself up with Ollama not yet running. It runs on CPU; no GPU
@@ -1507,8 +1505,7 @@ have it (see step 5).</p>
 <p>These are the defaults and you can change any of them later, but do not guess at substitutes: the
 vision model in particular was chosen on a benchmark over real camera frames, and the obvious
 alternatives failed in ways that matter. One faster, smaller model described <em>"a nighttime scene of
-a porch with a lit lamp and a door"</em> on a frame that was a blank error screen. <code>MODELS.md</code> in the
-repository has the comparison.</p>
+a porch with a lit lamp and a door"</em> on a frame that was a blank error screen.</p>
 <p>Use a recent Ollama if you can — <strong>0.32 or newer</strong>. Upgrading from 0.21 made Minder's routing more
 than twice as fast on the same model, and older builds quietly ignore the structured-output format
 for newer model families, which makes them look broken when they are not.</p>
@@ -1530,7 +1527,7 @@ Minder comes up empty and looks like it lost everything.</p>
 <div class="highlight"><pre><span></span><code>cp<span class="w"> </span>.env.example<span class="w"> </span>.env
 nano<span class="w"> </span>.env
 </code></pre></div>
-<p><code>.env.example</code> is the short list. Every variable the stack takes — 87 of them, with the default
+<p><code>.env.example</code> is the short list. Every variable the stack takes — 109 of them, with the default
 and the reasoning — is in <code>env.sample</code>, generated from the compose file so it is always current;
 copy a line from there into <code>.env</code> to change it.</p>
 <p>You can genuinely leave all of it blank on a first run — the web interface auto-detects your
@@ -1542,6 +1539,13 @@ find your cameras:</p>
 </code></pre></div>
 <p><code>MINDER_SUBNET</code> is a prefix, not CIDR: Minder appends <code>.0/24</code> itself, so <code>192.168.0</code> scans
 <code>192.168.0.0/24</code>. Run <code>hostname -I</code> and drop the last number to get yours.</p>
+<p><code>MINDER_CAM_USER</code> / <code>MINDER_CAM_PASS</code> are the <strong>shared</strong> login, tried on every camera. A camera
+with a different password gets its own, either on the portal's Cameras tab or from the host:</p>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>camera-password<span class="w"> </span><span class="m">192</span>.168.0.31<span class="w"> </span>admin<span class="w">    </span><span class="c1"># prompts for the password, hidden</span>
+./minder<span class="w"> </span>camera-password<span class="w"> </span>--list<span class="w">                </span><span class="c1"># which cameras have their own</span>
+./minder<span class="w"> </span>camera-password<span class="w"> </span>--clear<span class="w"> </span><span class="m">192</span>.168.0.31<span class="w">  </span><span class="c1"># back to the shared login</span>
+</code></pre></div>
+<p>The password is typed into the terminal, never passed as an argument or sent through chat.</p>
 <p>Telegram, Home Assistant and cloud AI are all set up later through the web interface — nothing here
 needs them.</p>
 <div class="highlight"><pre><span></span><code>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>.env<span class="w">                 </span><span class="c1"># it will hold passwords and tokens</span>
@@ -1581,11 +1585,15 @@ always will. If you want the friendly name:</p>
 <div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>hostnamectl<span class="w"> </span>set-hostname<span class="w"> </span>minder
 sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>-y<span class="w"> </span>avahi-daemon
 </code></pre></div>
+<p><strong>Sign in with <code>admin</code> / <code>minder</code>, then change it.</strong> That default is published, so until you change
+it anyone on your network can sign in — Minder prints a warning at every start until you do. Change
+it under <strong>Settings → Dashboard Password</strong>.</p>
 <p>Then:</p>
 <ol>
 <li><strong>Add cameras.</strong> Minder scans your network and lists what it finds. Confirm the ones you want and
    give each a name you would actually say out loud — "Front Door", "Side Gate", "Driveway". Those
-   names are what you use when talking to it.</li>
+   names are what you use when talking to it. Behind the name each camera has a permanent ID, so
+   renaming one later does not break its rules or history.</li>
 <li><strong>Connect a messaging channel.</strong> Telegram or Discord. Scan the QR code, and the bot will message
    you to confirm.</li>
 <li><strong>Connect Home Assistant</strong> if you have smart devices. Minder discovers them; you pick which it
@@ -1593,11 +1601,17 @@ sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> <
 </ol>
 <p>That is the whole setup. Everything else is conversation.</p>
 <h3 id="keeping-it-running">Keeping it running<a class="headerlink" href="#keeping-it-running" title="Permanent link">&para;</a></h3>
-<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>status<span class="w">                    </span><span class="c1"># what's running, and anything not right</span>
-./minder<span class="w"> </span>logs<span class="w"> </span>minder<span class="w">               </span><span class="c1"># what it's doing</span>
-./minder<span class="w"> </span>restart<span class="w">                   </span><span class="c1"># if something seems stuck</span>
+<div class="highlight"><pre><span></span><code>./minder<span class="w"> </span>status<span class="w">                    </span><span class="c1"># what's running, on what silicon, and anything not right</span>
+./minder<span class="w"> </span>logs<span class="w"> </span>minder<span class="w">               </span><span class="c1"># follow a service's logs</span>
+./minder<span class="w"> </span>restart<span class="w">                   </span><span class="c1"># down then up, if something seems stuck</span>
 ./minder<span class="w"> </span>down<span class="w">                      </span><span class="c1"># stop everything (your data is kept)</span>
-./minder<span class="w"> </span>up<span class="w">                        </span><span class="c1"># start again</span>
+./minder<span class="w"> </span>up<span class="w">                        </span><span class="c1"># build, start, and wait until it can answer</span>
+./minder<span class="w"> </span>build<span class="w">                     </span><span class="c1"># build the image without starting it</span>
+./minder<span class="w"> </span>bootstrap<span class="w">                 </span><span class="c1"># re-detect this machine and rewrite .env (asks first)</span>
+./minder<span class="w"> </span>camera-password<span class="w"> </span>&lt;ip&gt;<span class="w">      </span><span class="c1"># give one camera its own password (also --list, --clear &lt;ip&gt;)</span>
+./minder<span class="w"> </span>migrate-cameras<span class="w">           </span><span class="c1"># report the camera-ID migration; --apply to run it</span>
+./minder<span class="w"> </span>search<span class="w"> </span><span class="nb">enable</span><span class="w">             </span><span class="c1"># semantic search on (also disable, status)</span>
+./minder<span class="w"> </span>face-model<span class="w"> </span>status<span class="w">         </span><span class="c1"># face recognition's model (also install &lt;m&gt;, use &lt;m&gt;)</span>
 </code></pre></div>
 <p><code>./minder status</code> is the one to reach for first. As well as which services are up, it reports which
 processor is doing the vision work — and says so plainly when an accelerator you have is not being
@@ -1627,8 +1641,8 @@ used, which otherwise looks exactly like not having one.</p>
 "every night at 9pm turn on the porch light"
 "switch off the pump when the water level is reached"</p>
 </blockquote>
-<p>Minder writes the rule, shows it back to you, and runs it from then on. You can list and remove rules
-the same way.</p>
+<p>Minder writes the rule, shows it back to you, and runs it from then on. To see, switch off or delete
+rules, use the portal's <strong>Rules</strong> tab — chat creates rules but does not list or remove them.</p>
 <p><strong>Ask about the house</strong></p>
 <blockquote>
 <p>"what cameras do I have"
@@ -1637,8 +1651,8 @@ the same way.</p>
 "anything at the door today?"</p>
 </blockquote>
 <h3 id="if-it-misunderstands-you">If it misunderstands you<a class="headerlink" href="#if-it-misunderstands-you" title="Permanent link">&para;</a></h3>
-<p>It gets the intent right about <strong>19 times in 20</strong> — that is measured, not a guess, across 166 real
-phrasings (<code>scripts/bench_router.py</code> if you want to run it yourself). The twentieth time, the most
+<p>It gets the intent right about <strong>92 times in 100</strong> — measured, not a guess, on a 184-case benchmark
+of real phrasings, the hard ones added from earlier misreadings. When it gets one wrong, the most
 useful thing you can do is reply <strong><code>wrong</code></strong>. Minder records the message it misread, asks what you
 meant, and <code>wrong: query</code> (or <code>snapshot</code>, <code>device_now</code>, <code>scenario</code>, …) files it as a test case that
 the next version is checked against. Beyond that, three things help:</p>
@@ -1668,10 +1682,12 @@ if it misidentifies someone, you get a wrong name — never a missed intruder.</
 <h2 id="alerts">Alerts<a class="headerlink" href="#alerts" title="Permanent link">&para;</a></h2>
 <p>When a camera detects something worth telling you about, Minder sends a message with a snapshot and
 a short description of what it is — not just "motion detected", but what is actually there.</p>
-<p><strong>If you get too many alerts</strong>, say so: <em>"stop alerting me about cars in the driveway"</em>, or set quiet
-hours. Alerting rules are rules like any other.</p>
-<p><strong>If you are missing alerts</strong>, check the camera is armed in the web UI. Minder only alerts on cameras
-you have armed.</p>
+<p>Alerts come only from rules, so both kinds of problem are fixed in the portal's <strong>Rules</strong> tab:</p>
+<p><strong>If you get too many alerts</strong>, narrow the rule — fewer cameras, or <em>night only</em> instead of
+<em>always</em> — or switch it off. Chat cannot remove or change a rule.</p>
+<p><strong>If you are missing alerts</strong>, check there is an enabled rule covering that camera at that time of
+day. Asking <em>"what did you not tell me about last night"</em> lists the detections that did not alert,
+and why (no rule, cooldown, or the second look disagreed).</p>
 <h2 id="asking-what-happened">Asking what happened<a class="headerlink" href="#asking-what-happened" title="Permanent link">&para;</a></h2>
 <blockquote>
 <p>"what happened today between 11 and 3"
@@ -1692,10 +1708,14 @@ with the closest matching events, best first, and never claims a match is certai
 <h2 id="snapshots-video-and-history">Snapshots, video and history<a class="headerlink" href="#snapshots-video-and-history" title="Permanent link">&para;</a></h2>
 <p>Every alert is kept. In the web UI you can scroll back through events, view the snapshot or the clip,
 and mark things as seen. Ask in chat too: <em>"anything at the gate yesterday?"</em></p>
-<h2 id="when-minder-asks-you-something">When Minder asks you something<a class="headerlink" href="#when-minder-asks-you-something" title="Permanent link">&para;</a></h2>
-<p>Minder runs a health check every six hours. If it finds a problem it can fix — a camera that dropped
-off, a service that needs restarting — <strong>it asks you first</strong> and waits.</p>
-<p>It never repairs anything on its own. Reply to approve, or ignore it and nothing happens.</p>
+<h2 id="when-minder-tells-you-something-is-wrong">When Minder tells you something is wrong<a class="headerlink" href="#when-minder-tells-you-something-is-wrong" title="Permanent link">&para;</a></h2>
+<p>A health monitor checks every 45 seconds that each part — the agent runtime, Frigate, Home
+Assistant, Ollama, the chat adapters — is not just running but working. When something goes down or comes back it
+sends you a message, over whichever channel is up. It reports; it never restarts anything. The
+current picture is under <strong>Settings → Health &amp; Recovery</strong>, or send <code>/health</code> on Telegram.</p>
+<p>Every six hours, and at start, it also checks Minder's own saved state. If a file is damaged or
+missing, <strong>it asks you first</strong>: <code>/approve</code> restores it from the last backup, <code>/reject</code> leaves it.
+It never repairs anything on its own.</p>
 <h2 id="running-without-a-language-model">Running without a language model<a class="headerlink" href="#running-without-a-language-model" title="Permanent link">&para;</a></h2>
 <p>Set <code>MINDER_LLM=off</code> in <code>.env</code> (then <code>./minder up</code>) and Minder never calls a language model. You
 don't need Ollama at all, and the appliance fits smaller boxes: the model alone needs about 3.7 GB.</p>
@@ -1777,8 +1797,9 @@ appliance itself.</p>
 <p>Cloud AI is opt-in and used only when you turn it on — it is better at detailed scene descriptions,
 and it is what powers one-time training when you teach Minder to recognise something new. When it is
 off, Minder still works; descriptions are just less detailed.</p>
-<p>Your recordings are never uploaded. Snapshots go to a cloud model only if you enabled cloud vision,
-and only for the specific question being asked.</p>
+<p>Your recordings are never uploaded. A snapshot goes to a cloud model only if you set an OpenRouter
+key — for the features you switched to cloud, and for the second look on rules marked <em>critical</em>.
+<a href="../privacy/">Privacy</a> has the details, including how to keep critical rules local.</p>
 <h2 id="troubleshooting">Troubleshooting<a class="headerlink" href="#troubleshooting" title="Permanent link">&para;</a></h2>
 <table>
 <thead>
@@ -1798,15 +1819,15 @@ and only for the specific question being asked.</p>
 </tr>
 <tr>
 <td>Alerts stopped</td>
-<td>Check the camera is still armed, and that quiet hours are not on.</td>
+<td>Check the rule is still enabled in the Rules tab, and the camera is online on the Cameras tab.</td>
 </tr>
 <tr>
 <td>Device won't switch</td>
-<td>Home Assistant may have lost the device. Ask <em>"diagnose"</em> and Minder will check.</td>
+<td>Home Assistant may have lost the device. Check Settings → Health &amp; Recovery, and the device in Home Assistant.</td>
 </tr>
 <tr>
 <td>Everything seems stuck</td>
-<td>Ask <em>"diagnose"</em>. Minder checks itself and reports what is wrong.</td>
+<td>Run <code>./minder status</code> on the host, and look at Settings → Health &amp; Recovery — both say what is down.</td>
 </tr>
 </tbody>
 </table>

@@ -890,6 +890,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#person-re-identification-if-you-arm-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Person re-identification, if you arm it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#deleting-someone" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1018,6 +1029,17 @@
 </li>
         
           <li class="md-nav__item">
+  <a href="#person-re-identification-if-you-arm-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Person re-identification, if you arm it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
   <a href="#deleting-someone" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1120,6 +1142,11 @@ model is local. Nothing is uploaded to anybody.</p>
 </table>
 <p>Both fall back to the local model if the cloud is unreachable — a cloud outage degrades quality, it
 never stops the appliance working.</p>
+<p><strong>One path uses the cloud without a separate switch: critical rules.</strong> A rule marked
+<code>severity: critical</code> with a second-look question (an <code>escalate</code> block) asks the cloud vision model to
+confirm it, and sends that one alert frame, at full resolution, to do so. It only happens if an
+OpenRouter key (<code>OPENROUTER_API_KEY</code>) is configured; with no key the check runs on the local model.
+To keep a critical rule local while a key is set, give its escalate block <code>tier: local</code>.</p>
 <p>Alerts themselves go out through <strong>Telegram or Discord</strong>, which is a deliberate choice you make when
 you connect a channel: the message and its snapshot pass through that provider like any other chat.
 If that matters to you, both are optional and Minder works without either.</p>
@@ -1137,27 +1164,41 @@ anybody — the record names the human who did it and when.</p>
 </thead>
 <tbody>
 <tr>
-<td>a mathematical template (128 numbers)</td>
+<td>a mathematical template (512 numbers)</td>
 <td><strong>the photograph</strong> — discarded once the template is computed</td>
 </tr>
 <tr>
 <td>the person's name and group</td>
-<td>anything at all about people you did not enrol</td>
+<td>any face template of people you did not enrol</td>
 </tr>
 <tr>
 <td>who enrolled them, and when</td>
-<td>any link between one stranger and another sighting</td>
+<td>any link between one stranger and another sighting, unless you arm re-identification (below)</td>
 </tr>
 </tbody>
 </table>
 <p>A template is not a picture and cannot be turned back into one.</p>
 <h3 id="strangers">Strangers<a class="headerlink" href="#strangers" title="Permanent link">&para;</a></h3>
-<p>An unrecognised face is recorded as <em>"a face, matched nobody"</em> and <strong>nothing about that person is
+<p>An unrecognised face is recorded as <em>"a face, matched nobody"</em> and <strong>no template of that face is
 kept</strong>. That is why <em>"was an unrecognised person at the gate last night?"</em> can be answered while
 <em>"was that the same stranger as Tuesday?"</em> cannot — answering the second would mean keeping
 biometrics of people who never agreed to it.</p>
 <p>That trade was chosen deliberately, and it is the difference between a system that recognises the
 people you invited and one that recognises everybody who walks past.</p>
+<h3 id="person-re-identification-if-you-arm-it">Person re-identification, if you arm it<a class="headerlink" href="#person-re-identification-if-you-arm-it" title="Permanent link">&para;</a></h3>
+<p>A separate plugin, <code>person-reidentify</code>, is not installed by default. When armed, it links sightings
+of the same unknown person across cameras — the visitor who walked up the drive and is now at the
+door — by comparing a numeric summary of their body's appearance, not their face.</p>
+<ul>
+<li><strong>The appearance summaries are held in memory only, for 15 minutes</strong> after a person was last seen
+  (<code>MINDER_REID_TTL_S</code>). They are never written to disk, and a restart clears them.</li>
+<li><strong>The event history records a visitor label</strong> such as <code>visitor-3fa9c21e</code> on each sighting. It is
+  random and carries no name. While the label exists, <em>"was that the same person
+  as ten minutes ago?"</em> can be answered for that visit — which is the point of the plugin.</li>
+<li>If face recognition later names someone on the same camera event, their visit is shown under that
+  name when you ask. The link is worked out at question time and never stored, so deleting the
+  person unlinks those visits too.</li>
+</ul>
 <h3 id="deleting-someone">Deleting someone<a class="headerlink" href="#deleting-someone" title="Permanent link">&para;</a></h3>
 <p>Deletion removes every template, clears their name from past events — <strong>the events remain, only the
 identification is withdrawn</strong> — records what it did, and then <strong>re-queries both stores and shows you
@@ -1175,9 +1216,14 @@ not still be recognised two years later because nobody remembered.</p>
 </thead>
 <tbody>
 <tr>
-<td>clips and snapshots</td>
+<td>clips</td>
 <td>Frigate, local disk</td>
-<td>7 days by default</td>
+<td>2 days by default (<code>MINDER_RECORD_DAYS</code>)</td>
+</tr>
+<tr>
+<td>snapshots</td>
+<td>Frigate, local disk</td>
+<td>7 days</td>
 </tr>
 <tr>
 <td>the event history</td>
@@ -1240,11 +1286,13 @@ biometric" is one file rather than a search.</p>
 </table>
 <h2 id="the-honest-caveats">The honest caveats<a class="headerlink" href="#the-honest-caveats" title="Permanent link">&para;</a></h2>
 <p><strong>Alert channels are third parties.</strong> Telegram and Discord see the alerts you route through them.</p>
-<p><strong>The portal guards all of this.</strong> It is reachable on your local network and protected by a password
-you set at install. If you use face recognition, that password is what stands between someone on
-your network and your household's biometric data — <strong>change it from the default</strong>.</p>
-<p><strong>Cloud features send a real frame.</strong> When enabled, the snapshot going to the provider is an actual
-picture of whatever triggered the alert.</p>
+<p><strong>The portal guards all of this.</strong> It is reachable on your local network, and it ships with a
+<strong>published default login, <code>admin</code> / <code>minder</code></strong>. Until you change it, anyone on your network can sign
+in, and Minder prints a warning saying so every time it starts. Change it under <strong>Settings →
+Dashboard Password</strong> on first sign-in. If you use face recognition, that password is what stands
+between someone on your network and your household's biometric data.</p>
+<p><strong>Cloud features send a real frame.</strong> When enabled — or when a critical rule is checked with a cloud
+key set — the snapshot going to the provider is an actual picture of whatever triggered the alert.</p>
 
 
 

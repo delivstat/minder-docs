@@ -1499,8 +1499,10 @@ cares.</p>
 in the case you wrote it for.</p>
 <p><strong>Tell me when the gardener arrives</strong></p>
 <div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">"condition_type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"face_identity"</span><span class="p">,</span><span class="w"> </span><span class="nt">"condition"</span><span class="p">:</span><span class="w"> </span><span class="s2">"gardener here"</span><span class="p">,</span>
-<span class="w"> </span><span class="nt">"cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"Front-Door"</span><span class="p">],</span><span class="w"> </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Ramesh"</span><span class="p">,</span><span class="w"> </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
+<span class="w"> </span><span class="nt">"cameras"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"cam_5e02af"</span><span class="p">],</span><span class="w"> </span><span class="nt">"identity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Alex"</span><span class="p">,</span><span class="w"> </span><span class="nt">"enabled"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">}</span>
 </code></pre></div>
+<p><code>cameras</code> lists camera IDs, which is what the Rules tab writes; the IDs are in <code>/data/cameras.json</code>.
+A camera's name still matches, but an ID survives the camera being renamed.</p>
 <table>
 <thead>
 <tr>
@@ -1522,7 +1524,7 @@ in the case you wrote it for.</p>
 <td>enrolled people in that group</td>
 </tr>
 <tr>
-<td><code>identity: "Ramesh"</code></td>
+<td><code>identity: "Alex"</code></td>
 <td>that person</td>
 </tr>
 <tr>
@@ -1564,7 +1566,8 @@ face is cheap and sharp. <strong>The face plugin's job is turning a general ques
 <p>The third is not a stranger, and does not fire stranger rules. Otherwise every distant figure at the
 end of a driveway would raise "unrecognised person", and you would turn the rule off within a week.</p>
 <h2 id="what-it-costs">What it costs<a class="headerlink" href="#what-it-costs" title="Permanent link">&para;</a></h2>
-<p>Measured on the reference appliance (Intel N100, 8 cameras):</p>
+<p>Measured on the reference box (an Intel i7-8750H; these steps run on its CPU — see
+<a href="../hardware-sizing/">Hardware sizing</a>):</p>
 <table>
 <thead>
 <tr>
