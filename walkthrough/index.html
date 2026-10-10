@@ -579,10 +579,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-whole-portal" class="md-nav__link">
+  <a href="#an-alert-with-the-language-model-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The whole portal
+        An alert, with the language model off
       
     </span>
   </a>
@@ -590,10 +590,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#the-same-with-the-language-model-on" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        The same, with the language model on
       
     </span>
   </a>
@@ -601,10 +601,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
+  <a href="#the-web-portal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Events
+        The web portal
       
     </span>
   </a>
@@ -612,32 +612,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cameras" class="md-nav__link">
+  <a href="#run-it-yourself" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cameras
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rules
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#people" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        People
+        Run it yourself
       
     </span>
   </a>
@@ -952,10 +930,10 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#the-whole-portal" class="md-nav__link">
+  <a href="#an-alert-with-the-language-model-off" class="md-nav__link">
     <span class="md-ellipsis">
       
-        The whole portal
+        An alert, with the language model off
       
     </span>
   </a>
@@ -963,10 +941,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#overview" class="md-nav__link">
+  <a href="#the-same-with-the-language-model-on" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Overview
+        The same, with the language model on
       
     </span>
   </a>
@@ -974,10 +952,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#events" class="md-nav__link">
+  <a href="#the-web-portal" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Events
+        The web portal
       
     </span>
   </a>
@@ -985,32 +963,10 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#cameras" class="md-nav__link">
+  <a href="#run-it-yourself" class="md-nav__link">
     <span class="md-ellipsis">
       
-        Cameras
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#rules" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        Rules
-      
-    </span>
-  </a>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#people" class="md-nav__link">
-    <span class="md-ellipsis">
-      
-        People
+        Run it yourself
       
     </span>
   </a>
@@ -1038,60 +994,58 @@
 
 
 <h1 id="walkthrough">Walkthrough<a class="headerlink" href="#walkthrough" title="Permanent link">&para;</a></h1>
-<p>Six short clips of the web portal, with no narration — each is one tab, doing the thing that tab is
-for.</p>
+<p>Three short clips with no narration: an alert arriving and the chat answering, first with the
+language model off and then on, and then the web portal.</p>
 <div class="admonition note">
-<p class="admonition-title">Everything on screen is invented</p>
-<p>These were recorded against a <strong>seeded demo instance</strong>, not a working appliance. The cameras
-(<code>Front-Door</code>, <code>Driveway</code>, <code>Garden</code>, <code>Side-Gate</code>) do not exist, the events never happened, and
-every still is generated — each one carries a <code>SYNTHETIC DEMO FRAME</code> label in its corner so you
-never have to wonder whether you are looking at somebody's front door.</p>
-<p>That is the trade: the frames look synthetic because they are. A demo of a camera system is a
-poor reason to publish footage of a real house, and a product that argues for careful handling
-of other people's faces should not open by putting a household on the internet.</p>
-<p>The seeder is <code>scripts/seed_demo.py</code>; the recorder is <code>scripts/record_demo.mjs</code>, and it refuses
-to run against anything but the seeded instance.</p>
+<p class="admonition-title">No real house</p>
+<p>These were recorded with the <strong>canned demo</strong> (<code>./demo/run.sh</code>). It runs the real Minder image
+against stand-ins: a stand-in Frigate, a stand-in Home Assistant, and four cameras streaming
+licensed stock photos (<code>Front Door</code>, <code>Driveway</code>, <code>Garden</code>, <code>Side Gate</code>). Each frame is labelled
+<code>DEMO · stock photo</code>.</p>
+<p>Everything Minder does on screen is real. The alerts start as real Frigate events on MQTT. The
+detection boxes come from Minder's own YOLO. The descriptions come from the model running
+locally. The light switches in the stand-in Home Assistant. A product that argues for careful
+handling of other people's faces should not demo itself on somebody's front door.</p>
+<p>The recorder (<code>demo/record.mjs</code>) refuses to film anything but the demo house. Recorded in
+October 2026.</p>
 </div>
-<div class="admonition info">
-<p class="admonition-title">Recorded in August 2026</p>
-<p>The clips predate some features, so the portal you install looks slightly different: cameras
-now carry a permanent ID with the name as a label, a camera can have its own password, search
-adds a "Looks like" box to Events, face recognition has a choice of model
-(<code>./minder face-model</code>), and the health page has more rows. With <code>MINDER_LLM=off</code>, the Rules
-tab can only turn a sentence into a count rule ("more than 3 cars on the driveway"); other
-rules are built with the form.</p>
-</div>
-<h2 id="the-whole-portal">The whole portal<a class="headerlink" href="#the-whole-portal" title="Permanent link">&para;</a></h2>
-<p>Every tab in one pass — start here if you only watch one.</p>
-<video controls muted playsinline width="100%" src="../videos/full-tour.mp4"></video>
+<h2 id="an-alert-with-the-language-model-off">An alert, with the language model off<a class="headerlink" href="#an-alert-with-the-language-model-off" title="Permanent link">&para;</a></h2>
+<p><code>MINDER_LLM=off</code>: the mode for a box with no graphics card to spare. First, the questions you would
+ask on Telegram or Discord: a live check, a photo of the garden, and switching on the porch light.
+Then a courier arrives at the front door, and the alert arrives with the box YOLO drew and a clip.
+Then the side gate camera is taken offline, and "who came by today?" lists the day.
+Each question is matched by rules rather than read by a model.</p>
+<video controls muted playsinline width="100%" src="../videos/demo-console-off.mp4"></video>
 
-<h2 id="overview">Overview<a class="headerlink" href="#overview" title="Permanent link">&para;</a></h2>
-<p>Cameras online, unread events, whether Home Assistant is connected, how many rules are active, and
-recent activity.</p>
-<video controls muted playsinline width="100%" src="../videos/overview.mp4"></video>
+<h2 id="the-same-with-the-language-model-on">The same, with the language model on<a class="headerlink" href="#the-same-with-the-language-model-on" title="Permanent link">&para;</a></h2>
+<p>With the model on, each alert carries a sentence about the scene ("The person is wearing a red
+shirt and red cap. They are holding a black package…"). Open questions ("what's going on in the
+garden?") get a description of what the camera sees rather than a list of detections. It runs on a
+4 GB graphics card; see <a href="../hardware-sizing/">Hardware sizing</a>.</p>
+<video controls muted playsinline width="100%" src="../videos/demo-console-llm.mp4"></video>
 
-<h2 id="events">Events<a class="headerlink" href="#events" title="Permanent link">&para;</a></h2>
-<p>What each camera saw, described in a sentence rather than logged as "motion". Unread events are
-marked; the thumbnail is the frame the description was written from.</p>
-<video controls muted playsinline width="100%" src="../videos/events.mp4"></video>
+<p><a href="../using-minder/">What changes with the model on or off →</a></p>
+<h2 id="the-web-portal">The web portal<a class="headerlink" href="#the-web-portal" title="Permanent link">&para;</a></h2>
+<p>What an owner sees after the alert:</p>
+<ul>
+<li><strong>Overview:</strong> cameras online, unread events, Home Assistant, active rules.</li>
+<li><strong>Events:</strong> what each camera saw.</li>
+<li><strong>Cameras:</strong> one thumbnail per camera, with its own password if it needs one.</li>
+<li><strong>Chat:</strong> the same answers your phone gets, because it takes the same path as the Telegram and
+  Discord bots.</li>
+<li><strong>Devices:</strong> the lights and locks Home Assistant knows about.</li>
+<li><strong>Rules:</strong> what to alert on, on which cameras.</li>
+</ul>
+<p>Light by default; the button in the top bar switches to dark.</p>
+<video controls muted playsinline width="100%" src="../videos/demo-portal.mp4"></video>
 
-<h2 id="cameras">Cameras<a class="headerlink" href="#cameras" title="Permanent link">&para;</a></h2>
-<p>The inventory, with a thumbnail and a live view per camera, and network discovery for adding more.</p>
-<video controls muted playsinline width="100%" src="../videos/cameras.mp4"></video>
-
-<h2 id="rules">Rules<a class="headerlink" href="#rules" title="Permanent link">&para;</a></h2>
-<p>Standing rules — what to watch for, on which cameras, between which hours. New ones can be written
-in plain language; the model parses the sentence into a rule you can then read and edit.</p>
-<video controls muted playsinline width="100%" src="../videos/rules.mp4"></video>
-
-<h2 id="people">People<a class="headerlink" href="#people" title="Permanent link">&para;</a></h2>
-<p>Face enrolment, and the consent text that goes with it. Worth pausing on: it states what is stored,
-what is discarded, and that a recognised face <strong>never silences an alert</strong>.</p>
-<p>The clip shows the tab with nobody enrolled — which is the state that matters most, because it is
-the one where every face is reported as <em>unrecognised</em>.</p>
-<video controls muted playsinline width="100%" src="../videos/people.mp4"></video>
-
-<p><a href="../face-recognition/">What is actually stored →</a></p>
+<h2 id="run-it-yourself">Run it yourself<a class="headerlink" href="#run-it-yourself" title="Permanent link">&para;</a></h2>
+<p>The demo needs Docker and nothing else: no cameras, no Home Assistant, no graphics card.</p>
+<div class="highlight"><pre><span></span><code>./demo/run.sh<span class="w">            </span><span class="c1"># language model off</span>
+./demo/run.sh<span class="w"> </span>--llm<span class="w">      </span><span class="c1"># language model on (add --gpu for an NVIDIA card)</span>
+</code></pre></div>
+<p>The presenter console opens on <code>http://127.0.0.1:8090</code> and the portal on <code>http://127.0.0.1:8480</code>
+(sign in with <code>demo</code> / <code>demo</code>). <code>demo/README.md</code> has the script.</p>
 
 
 
