@@ -21,7 +21,7 @@
       
       
       <link rel="icon" href="../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -29,10 +29,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -406,6 +406,8 @@
       
         
       
+        
+      
     
     
     
@@ -492,6 +494,34 @@
     
   
     Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The language model in the cloud
   
 
     
@@ -1116,32 +1146,34 @@ thing about it — so this page is specific rather than reassuring.</p>
 model is local. Nothing is uploaded to anybody.</p>
 <p><strong>Your recordings.</strong> Frigate stores clips and snapshots on the machine's own disk.</p>
 <p><strong>Face templates</strong>, if you use recognition. They are computed on the appliance and stored there.</p>
-<p><strong>Your conversations with it.</strong> The language model that reads your messages runs locally too.</p>
+<p><strong>Your conversations with it.</strong> The language model that reads your messages runs locally too,
+unless you <a href="../cloud-model/">move it to the cloud</a>.</p>
 <h2 id="what-can-leave-only-if-you-turn-it-on">What can leave, only if you turn it on<a class="headerlink" href="#what-can-leave-only-if-you-turn-it-on" title="Permanent link">&para;</a></h2>
-<p>Two features are opt-in, off by default, and independent of each other:</p>
+<p>Two choices are opt-in and off by default:</p>
 <table>
 <thead>
 <tr>
-<th>Feature</th>
+<th>Choice</th>
 <th>Setting</th>
 <th>What is sent</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Cloud description of an alert frame</td>
-<td><code>MINDER_DESCRIBE_PROVIDER=openrouter</code></td>
-<td>that one snapshot</td>
+<td>Cloud answers to visual questions only</td>
+<td><code>MINDER_QUERY_PROVIDER=openrouter</code></td>
+<td>the frame for that one question</td>
 </tr>
 <tr>
-<td>Cloud answers to visual questions</td>
-<td><code>MINDER_QUERY_PROVIDER=openrouter</code></td>
-<td>that one snapshot</td>
+<td>The whole language model in the cloud (<a href="../cloud-model/">guide</a>)</td>
+<td><code>MINDER_ROUTER_PROVIDER</code> and <code>MINDER_VISION_PROVIDER</code> set to <code>openrouter</code></td>
+<td>every chat message's text with your camera and device names; the frame for each scene question; each alert's frame if descriptions stay on (<code>MINDER_DESCRIBE</code>)</td>
 </tr>
 </tbody>
 </table>
-<p>Both fall back to the local model if the cloud is unreachable — a cloud outage degrades quality, it
-never stops the appliance working.</p>
+<p>The first falls back to the local model if the cloud is unreachable. The second has no local model to
+fall back to: detection and alerts keep working, and chat falls back to the keyword reader Minder
+uses with the model off. A cloud outage degrades answers; it never stops the appliance watching.</p>
 <p><strong>One path uses the cloud without a separate switch: critical rules.</strong> A rule marked
 <code>severity: critical</code> with a second-look question (an <code>escalate</code> block) asks the cloud vision model to
 confirm it, and sends that one alert frame, at full resolution, to do so. It only happens if an
@@ -1367,10 +1399,10 @@ key set — the snapshot going to the provider is an actual picture of whatever 
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>

@@ -23,7 +23,7 @@
       
       
       <link rel="icon" href="../assets/logo.svg">
-      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.8.0">
     
     
       
@@ -31,10 +31,10 @@
       
     
     
-      <link rel="stylesheet" href="../assets/stylesheets/main.ec1eaa64.min.css">
+      <link rel="stylesheet" href="../assets/stylesheets/main.57a0d79d.min.css">
       
         
-        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+        <link rel="stylesheet" href="../assets/stylesheets/palette.fb2fffe2.min.css">
       
       
 
@@ -410,6 +410,8 @@
       
         
       
+        
+      
     
     
     
@@ -733,6 +735,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-language-model-in-the-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The language model in the cloud
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privacy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -789,6 +802,34 @@
     
   
     Hardware sizing
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    The language model in the cloud
   
 
     
@@ -1339,6 +1380,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#the-language-model-in-the-cloud" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The language model in the cloud
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#privacy" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -1510,9 +1562,9 @@ a porch with a lit lamp and a door"</em> on a frame that was a blank error scree
 than twice as fast on the same model, and older builds quietly ignore the structured-output format
 for newer model families, which makes them look broken when they are not.</p>
 <blockquote>
-<p><strong>Skipping this?</strong> You can run entirely on cloud AI instead — set <code>OPENROUTER_API_KEY</code> in step 4
-and <code>MINDER_DESCRIBE_PROVIDER=openrouter</code>. It is faster and more detailed, but camera snapshots
-then leave your network.</p>
+<p><strong>Skipping this?</strong> You can run the language model in the cloud instead, with no Ollama and no
+graphics card: see <a href="#the-language-model-in-the-cloud">The language model in the cloud</a>. Chat
+text, and camera snapshots for the questions that need them, then leave your network.</p>
 </blockquote>
 <h3 id="3-get-minder">3. Get Minder<a class="headerlink" href="#3-get-minder" title="Permanent link">&para;</a></h3>
 <p>Minder is not open source. The repository is private, and this step needs an account that has been
@@ -1791,6 +1843,39 @@ when Minder starts, so <code>./minder up</code> after changing <code>MINDER_LLM<
 shows where the detector runs and why.</p>
 <p>The health page shows the language model as "not used (MINDER_LLM=off)", not as a fault. Set
 <code>MINDER_LLM=on</code> and restart to bring everything back.</p>
+<h2 id="the-language-model-in-the-cloud">The language model in the cloud<a class="headerlink" href="#the-language-model-in-the-cloud" title="Permanent link">&para;</a></h2>
+<p>The model doesn't have to run on the box. Point Minder's two model profiles at a cloud provider
+(OpenRouter is built in) and a small box with no graphics card still gets chat, rules from a
+sentence, history questions and descriptions. <strong><a href="../cloud-model/">Moving the language model to the
+cloud</a></strong> walks through it step by step; in short:</p>
+<div class="highlight"><pre><span></span><code><span class="nv">OPENROUTER_API_KEY</span><span class="o">=</span>sk-or-...
+<span class="nv">MINDER_ROUTER_PROVIDER</span><span class="o">=</span>openrouter
+<span class="nv">MINDER_ROUTER_MODEL</span><span class="o">=</span>&lt;an<span class="w"> </span>OpenRouter<span class="w"> </span>model<span class="w"> </span>id&gt;<span class="w">        </span><span class="c1"># reads each message into a plan</span>
+<span class="nv">MINDER_VISION_PROVIDER</span><span class="o">=</span>openrouter
+<span class="nv">MINDER_VISION_MODEL</span><span class="o">=</span>&lt;a<span class="w"> </span>multimodal<span class="w"> </span>OpenRouter<span class="w"> </span>model&gt;<span class="w">  </span><span class="c1"># chat, descriptions, scene questions</span>
+<span class="nv">MINDER_DESCRIBE</span><span class="o">=</span>off<span class="w">                                  </span><span class="c1"># recommended with a cloud model</span>
+</code></pre></div>
+<p>Then <code>./minder up</code>. Ollama isn't needed: the health page shows it as "not used". If the box does
+have a graphics card, Frigate's detector gets it, since no local model needs it.</p>
+<p><strong>Turning off alert descriptions.</strong> The description written for each alert is the model call
+Minder makes most often: one per alert, which on a busy camera is dozens a day. With
+<code>MINDER_DESCRIBE=off</code>, alerts still arrive with the photo, every detected object boxed, and the
+clip; only the sentence about the scene is dropped. Chat is unaffected, so the bill follows what
+people ask rather than how busy the street is. The health page has an "Alert descriptions" row that
+says which way it is set. This works with a local model too.</p>
+<p><strong>What leaves the house</strong> with the model in the cloud:</p>
+<ul>
+<li>the text of every chat message, with the names of your cameras and devices (the router needs
+  them to read "turn off the pump");</li>
+<li>a camera snapshot when someone asks a question about a scene ("what's happening on the porch?"),
+  and for each alert if descriptions are on;</li>
+<li>a snapshot for the second look on a rule you gave a severity check.</li>
+</ul>
+<p>Recordings and the event history stay on the box, as do face recognition and search.</p>
+<p><strong>Choose the router model with care.</strong> It has to return a structured plan (JSON-schema output), and
+how well it reads requests decides how well Minder understands you. The local default, gemma3:4b,
+reads 94.6% of the 194 recorded test messages right (<code>baseline/router-topology-*.json</code>); a cloud
+model should be measured on the same messages before it is relied on.</p>
 <h2 id="privacy">Privacy<a class="headerlink" href="#privacy" title="Permanent link">&para;</a></h2>
 <p>By default <strong>nothing leaves your house.</strong> Camera images are analysed by a model running on the
 appliance itself.</p>
@@ -1927,10 +2012,10 @@ need to touch that — but if you want the technical picture, see
     
       
       
-      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.tabs.sticky", "navigation.instant", "navigation.top", "navigation.footer", "navigation.indexes", "toc.follow", "search.suggest", "search.highlight", "content.code.copy"], "search": "../assets/javascripts/workers/search.a7633da7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
     
     
-      <script src="../assets/javascripts/bundle.d7400e89.min.js"></script>
+      <script src="../assets/javascripts/bundle.c21346df.min.js"></script>
       
     
   </body>
