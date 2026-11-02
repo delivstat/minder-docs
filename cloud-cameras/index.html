@@ -1099,6 +1099,7 @@ What it can't do, and why, is at the end of this page.</p>
      missing picture proves nothing either way.</li>
 <li><strong>The alert carries the picture</strong> it was found on, with the detection boxed.</li>
 </ol>
+<p><img alt="Three cloud-camera events: an unconfirmed motion, a car, a person" src="../assets/screens/cloud-events.png" /></p>
 <p>The same check applies to every camera connected through Home Assistant, not only Qubo.</p>
 <h2 id="turning-on-the-qubo-add-on">Turning on the Qubo add-on<a class="headerlink" href="#turning-on-the-qubo-add-on" title="Permanent link">&para;</a></h2>
 <ol>
@@ -1107,16 +1108,20 @@ What it can't do, and why, is at the end of this page.</p>
      keeps your Qubo password on the box so it can sign in again.</li>
 <li>Enabling installs a reviewed, pinned version of the integration into Home Assistant, which
      restarts. Devices may not respond for about a minute.</li>
-<li><strong>Cameras → Add a cloud camera.</strong> Sign in with your Qubo <strong>email</strong> and password.</li>
-<li><strong>Use an email-based Qubo account.</strong> Phone (OTP) sign-ins expire after an hour. If yours is a
-     phone account, create an email account and share your cameras to it from the Qubo app.</li>
-<li>The password goes straight to Home Assistant; Minder doesn't store or log it.</li>
-<li><strong>Pick your cameras.</strong> Minder lists the account's devices and what each can give it:</li>
-<li><strong>Add</strong> when the device sends motion events;</li>
-<li><strong>Can't add</strong> when it doesn't, because without motion there is nothing to start an alert.</li>
-<li><strong>Add a rule</strong> for the new camera in the <strong>Rules</strong> tab, as for any camera.</li>
 </ol>
+<p><img alt="The Qubo add-on in Settings, off, with its risks listed" src="../assets/screens/addons-off.png" />
+2. <strong>Cameras → Add a cloud camera.</strong> Sign in with your Qubo <strong>email</strong> and password.
+   - <strong>Use an email-based Qubo account.</strong> Phone (OTP) sign-ins expire after an hour. If yours is a
+     phone account, create an email account and share your cameras to it from the Qubo app.
+   - The password goes straight to Home Assistant; Minder doesn't store or log it.</p>
+<p><img alt="Signing in to a Qubo account from the Cameras tab" src="../assets/screens/cloud-signin.png" />
+3. <strong>Pick your cameras.</strong> Minder lists the account's devices and what each can give it:
+   - <strong>Add</strong> when the device sends motion events;
+   - <strong>Can't add</strong> when it doesn't, because without motion there is nothing to start an alert.</p>
+<p><img alt="The account's devices: two can be added, an indoor camera with no motion events can't" src="../assets/screens/cloud-devices.png" />
+4. <strong>Add a rule</strong> for the new camera in the <strong>Rules</strong> tab, as for any camera.</p>
 <p>Added cameras appear on the Cameras tab with a <strong>☁ cloud</strong> badge and their latest picture.</p>
+<p><img alt="A cloud camera's card: its latest picture and the cloud badge" src="../assets/screens/cloud-camera-card.png" /></p>
 <p><strong>Tested so far:</strong> the Qubo Video Doorbell Pro (HCD04C). Qubo's indoor and outdoor cameras may work;
 the add-on lists what has been tested.</p>
 <h2 id="new-and-removed-devices-on-your-account">New and removed devices on your account<a class="headerlink" href="#new-and-removed-devices-on-your-account" title="Permanent link">&para;</a></h2>
@@ -1128,6 +1133,7 @@ the add-on lists what has been tested.</p>
   (<strong>remove</strong> on its card).</li>
 </ul>
 <h2 id="turning-it-off">Turning it off<a class="headerlink" href="#turning-it-off" title="Permanent link">&para;</a></h2>
+<p><img alt="The Qubo add-on enabled, with its Disable button" src="../assets/screens/addons-enabled.png" /></p>
 <p><strong>Settings → Add-ons → Disable</strong> removes, in order:
 1. the cloud cameras it added. A rule that watched only them is switched off, never widened to other
    cameras;
