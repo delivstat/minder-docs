@@ -261,7 +261,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../search/" class="md-tabs__link">
+        <a href="../cloud-cameras/" class="md-tabs__link">
           
   
   
@@ -702,6 +702,17 @@
 </li>
       
         <li class="md-nav__item">
+  <a href="#your-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your cameras
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
   <a href="#snapshots-video-and-history" class="md-nav__link">
     <span class="md-ellipsis">
       
@@ -891,6 +902,8 @@
       
         
       
+        
+      
     
     
     
@@ -933,6 +946,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud cameras (Qubo and others)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1340,6 +1381,17 @@
     <span class="md-ellipsis">
       
         Asking what happened
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#your-cameras" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Your cameras
       
     </span>
   </a>
@@ -1757,6 +1809,24 @@ Events tab has the same query as a form.</p>
 <em>"show me the light green car this week"</em>, <em>"someone carrying a bag at the door"</em>. Minder answers
 with the closest matching events, best first, and never claims a match is certain. See
 <em>Searching what the cameras saw</em> (<code>search.md</code>).</p>
+<h2 id="your-cameras">Your cameras<a class="headerlink" href="#your-cameras" title="Permanent link">&para;</a></h2>
+<p><strong>Ignoring a spot.</strong> If a camera keeps mistaking something fixed for a person or a car (a garden
+light at night, a statue, a poster), draw an <strong>ignore area</strong> around it: Rules tab → <em>Zones
+(regions)</em> → pick the camera → drop points around the spot → <em>Type: Ignore area</em> (people, vehicles
+or everything) → save. Anything whose feet are inside the area isn't detected there, by Frigate or by
+Minder's own checks, so it gives no alerts and live checks don't count it. A person walking past is
+detected as soon as they step off the patch, so keep the area tight around the object's base.</p>
+<p><strong>Removing a camera</strong> that's gone: <strong>remove</strong> on its card in the Cameras tab. Minder shows what
+removal changes before doing it:
+- a rule that watched only that camera is switched off, never widened to every camera;
+- its zones and its own password are deleted;
+- past events stay in history.</p>
+<p>A network scan adds it back if it returns.</p>
+<p><strong>Cloud cameras</strong> (Qubo and others with no video stream of their own) join through an add-on:
+see <a href="../cloud-cameras/">Cloud cameras</a>.</p>
+<p><strong>The portal as an app.</strong> Opened on the box itself (<code>http://localhost</code>), or over HTTPS, Chrome and
+Edge offer to <strong>install Minder</strong> as an app with its own window and icon. If the box can't be reached,
+the app says so instead of showing stale events.</p>
 <h2 id="snapshots-video-and-history">Snapshots, video and history<a class="headerlink" href="#snapshots-video-and-history" title="Permanent link">&para;</a></h2>
 <p>Every alert is kept. In the web UI you can scroll back through events, view the snapshot or the clip,
 and mark things as seen. Ask in chat too: <em>"anything at the gate yesterday?"</em></p>

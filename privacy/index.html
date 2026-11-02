@@ -257,7 +257,7 @@
     
     
       <li class="md-tabs__item">
-        <a href="../search/" class="md-tabs__link">
+        <a href="../cloud-cameras/" class="md-tabs__link">
           
   
   
@@ -583,6 +583,8 @@
       
         
       
+        
+      
     
     
     
@@ -625,6 +627,34 @@
 
           </label>
           <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../cloud-cameras/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cloud cameras (Qubo and others)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
             
               
                 
@@ -1149,7 +1179,7 @@ model is local. Nothing is uploaded to anybody.</p>
 <p><strong>Your conversations with it.</strong> The language model that reads your messages runs locally too,
 unless you <a href="../cloud-model/">move it to the cloud</a>.</p>
 <h2 id="what-can-leave-only-if-you-turn-it-on">What can leave, only if you turn it on<a class="headerlink" href="#what-can-leave-only-if-you-turn-it-on" title="Permanent link">&para;</a></h2>
-<p>Two choices are opt-in and off by default:</p>
+<p>Three choices are opt-in and off by default:</p>
 <table>
 <thead>
 <tr>
@@ -1168,6 +1198,11 @@ unless you <a href="../cloud-model/">move it to the cloud</a>.</p>
 <td>The whole language model in the cloud (<a href="../cloud-model/">guide</a>)</td>
 <td><code>MINDER_ROUTER_PROVIDER</code> and <code>MINDER_VISION_PROVIDER</code> set to <code>openrouter</code></td>
 <td>every chat message's text with your camera and device names; the frame for each scene question; each alert's frame if descriptions stay on (<code>MINDER_DESCRIBE</code>)</td>
+</tr>
+<tr>
+<td>Cloud cameras through the Qubo add-on (<a href="../cloud-cameras/">page</a>)</td>
+<td><strong>Settings → Add-ons → Enable</strong></td>
+<td>Qubo's cloud already has these cameras' events and pictures; Minder fetches them from it. Home Assistant keeps the Qubo password on the box and sends it only to Qubo</td>
 </tr>
 </tbody>
 </table>
